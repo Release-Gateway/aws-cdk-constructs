@@ -1,0 +1,694 @@
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#   IAM_USER_NO_POLICIES_CHECK
+#
+# Description:
+#   Checks that none of your IAM users have policies attached. IAM users must inherit permissions from IAM groups or roles. 
+#
+# Reports on:
+#   AWS::IAM::User
+#
+# Evaluates:
+#   AWS CloudFormation
+#
+# Rule Parameters:
+#   NA
+#
+# Scenarios:
+# a) SKIP: when there are no IAM Users present
+# b) PASS: when all IAM Users do not have policies attached
+# c) FAIL: when any IAM User have policies attached
+# d) SKIP: when metada has rule suppression for IAM_USER_NO_POLICIES_CHECK
+
+#
+# Select all IAM User resources from incoming template (payload)
+# 
+let aws_iam_users_no_policies = Resources.*[ Type == 'AWS::IAM::User'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "IAM_USER_NO_POLICIES_CHECK" 
+]
+
+rule IAM_USER_NO_POLICIES_CHECK when %aws_iam_users_no_policies !empty {
+  %aws_iam_users_no_policies.Properties.Policies empty
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 1.15    
+  	Violation: Inline policies are not allowed on IAM Users. IAM users must inherit permissions from IAM groups or roles.
+  	Fix: Remove the Policies list property from any IAM Users. 
+  >>
+}
+
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#   IAM_NO_INLINE_POLICY_CHECK 
+#
+# Description:
+#   Checks that inline policy feature is not in use.
+#
+# Reports on:
+#   AWS::IAM::User
+#   AWS::IAM::Role
+#   AWS::IAM::Group
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no IAM Users, Roles, or Groups present
+# b) PASS: when all IAM Users, Roles, or Groups present have no inline policies listed
+# c) FAIL: when any IAM Users, Roles, or Groups present have inline policies listed
+# d) SKIP: when metada has rule suppression for IAM_NO_INLINE_POLICY_CHECK
+
+#
+# Select all IAM User, Role, and Group resources from incoming template (payload)
+#
+let aws_iam_entities_no_inline_policy = Resources.*[
+  Type in [ /AWS::IAM::User/,
+            /AWS::IAM::Role/,
+            /AWS::IAM::Group/ ]
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "IAM_NO_INLINE_POLICY_CHECK"
+]
+
+rule IAM_NO_INLINE_POLICY_CHECK when %aws_iam_entities_no_inline_policy !empty {
+  %aws_iam_entities_no_inline_policy.Properties.Policies empty
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 1.15    
+    Violation: Inline policies are not allowed on IAM Users, Roles, or Groups.
+    Fix: Remove the Policies list property from any IAM Users, Roles, or Groups.
+  >>
+}
+
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#   IAM_POLICY_NO_STATEMENTS_WITH_ADMIN_ACCESS
+#
+# Description:
+#   Checks the IAM policies that you create for Allow statements that grant permissions to all actions on all resources. 
+#
+# Reports on:
+#   AWS::IAM::Policy
+#
+# Evaluates:
+#   AWS CloudFormation
+#
+# Rule Parameters:
+#   NA
+#
+# Scenarios:
+# a) SKIP: when there are no IAM Policies present
+# b) PASS: when all IAM Policies do not grant permissions to all actions on all resources
+# c) FAIL: when any IAM Policies grant permissions to all actions on all resources
+# d) SKIP: when metada has rule suppression for IAM_POLICY_NO_STATEMENTS_WITH_ADMIN_ACCESS
+
+#
+# Select all IAM Policy resources from incoming template (payload)
+# 
+let aws_iam_policies_no_statements_with_admin_access = Resources.*[ Type == 'AWS::IAM::Policy' 
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "IAM_POLICY_NO_STATEMENTS_WITH_ADMIN_ACCESS"
+]
+
+rule IAM_POLICY_NO_STATEMENTS_WITH_ADMIN_ACCESS when %aws_iam_policies_no_statements_with_admin_access !empty {
+  let violations = Resources.*[
+    Type == 'AWS::IAM::Policy' 
+    some Properties.PolicyDocument.Statement[*] {
+      some Action[*] == "*"
+      Effect == "Allow"
+      Resource == "*"
+    }
+  ]
+  %violations empty
+	<<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 1.16    
+    Violation: One or more IAM policies contain allow statements that grant permissions to all actions on all resources
+    Fix: Remove policy statements that match {"Effect": "Allow", "Action": "*", "Resource": "*"}
+  >>
+} 
+
+
+
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    S3_BUCKET_VERSIONING_ENABLED
+#
+# Description:
+#   Checks if versioning is enabled for your S3 buckets.
+#
+# Reports on:
+#    AWS::S3::Bucket
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no S3 resource present
+# b) PASS: when all S3 resources Versioning Configuration status is set to Enabled
+# c) FAIL: when all S3 resources have Versioning Configuration status property not set or set to Suspended
+# d) SKIP: when metadata includes the suppression for rule S3_BUCKET_VERSIONING_ENABLED
+
+#
+# Select all S3 resources from incoming template (payload)
+#
+let s3_buckets_versioning_enabled = Resources.*[ Type == 'AWS::S3::Bucket'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "S3_BUCKET_VERSIONING_ENABLED"
+]
+
+rule S3_BUCKET_VERSIONING_ENABLED when %s3_buckets_versioning_enabled !empty {
+  %s3_buckets_versioning_enabled.Properties.VersioningConfiguration exists
+  %s3_buckets_versioning_enabled.Properties.VersioningConfiguration.Status == 'Enabled'
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 2.1.3    
+    Violation: S3 Bucket Versioning must be enabled.
+    Fix: Set the S3 Bucket property VersioningConfiguration.Status to 'Enabled' .
+  >>
+}
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    S3_BUCKET_LEVEL_PUBLIC_ACCESS_PROHIBITED
+#
+# Description:
+#   Checks if Amazon Simple Storage Service (Amazon S3) buckets are publicly accessible.
+#
+# Reports on:
+#    AWS::S3::Bucket
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no S3 resource present
+# b) PASS: when all S3 resources Public Access Block Configuration element is present and properties are set to true
+# c) FAIL: when all S3 resources do not have the Public Access Block Configuration element present or all properties set to true
+# d) SKIP: when metada has rule suppression for S3_BUCKET_LEVEL_PUBLIC_ACCESS_PROHIBITED
+
+#
+# Select all S3 resources from incoming template (payload)
+#
+let s3_buckets_level_public_access_prohibited = Resources.*[ Type == 'AWS::S3::Bucket'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "S3_BUCKET_LEVEL_PUBLIC_ACCESS_PROHIBITED"
+]
+
+rule S3_BUCKET_LEVEL_PUBLIC_ACCESS_PROHIBITED when %s3_buckets_level_public_access_prohibited !empty {
+  %s3_buckets_level_public_access_prohibited.Properties.PublicAccessBlockConfiguration exists
+  %s3_buckets_level_public_access_prohibited.Properties.PublicAccessBlockConfiguration.BlockPublicAcls == true
+  %s3_buckets_level_public_access_prohibited.Properties.PublicAccessBlockConfiguration.BlockPublicPolicy == true
+  %s3_buckets_level_public_access_prohibited.Properties.PublicAccessBlockConfiguration.IgnorePublicAcls == true
+  %s3_buckets_level_public_access_prohibited.Properties.PublicAccessBlockConfiguration.RestrictPublicBuckets == true
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 2.1.5,3.3    
+    Violation: S3 Bucket Public Access controls need to be restricted.
+    Fix: Set S3 Bucket PublicAccessBlockConfiguration properties for BlockPublicAcls, BlockPublicPolicy, IgnorePublicAcls, RestrictPublicBuckets parameters to true.
+  >>
+}
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    ENCRYPTED_VOLUMES
+#
+# Description:
+#    Checks if the EBS volumes that are in an attached state are encrypted. 
+#
+# Reports on:
+#    AWS::EC2::Volume
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no EBS volume resources present
+# b) PASS: when all EBS volumes have the KmsKeyId property set or the Encrypted property set to true 
+# c) FAIL: when any EC2 volumes do not have the KmsKeyId or Encrypted property set
+# e) SKIP: hen metadata includes the suppression for rule ENCRYPTED_VOLUMES
+
+#
+# Select all EC2 Instance resources from incoming template (payload)
+#
+let ebs_volumes_encrypted = Resources.*[ Type == 'AWS::EC2::Volume' 
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "ENCRYPTED_VOLUMES"
+]
+
+rule ENCRYPTED_VOLUMES when %ebs_volumes_encrypted !empty {
+  %ebs_volumes_encrypted.Properties.KmsKeyId !empty
+	OR %ebs_volumes_encrypted.Properties.Encrypted == true
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 2.2.1    
+    Violation: EBS volumes in an attached state must encrypted.
+    Fix: either set the KmsKeyId property to a key ID, key alias, key ARN, or alias ARN 
+		or set the Encrypted property to true to encrypt the volume with the account default key or AWS managed key. 
+  >>
+}
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    EC2_EBS_ENCRYPTION_BY_DEFAULT
+#
+# Description:
+#    Check that Amazon Elastic Block Store (EBS) encryption is enabled by default
+# Reports on:
+#    AWS::EC2::Volume
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when no EC2 Volume resources are present
+# b) PASS: when all EC2 Volume resources have the Encrypted property set to true
+# c) FAIL: when any EC2 Volumes resources do not have the Encrypted property set to true
+# e) SKIP: when metadata includes the suppression for rule EC2_EBS_ENCRYPTION_BY_DEFAULT
+
+#
+# Select all EC2 Volume resources from incoming template (payload)
+#
+let ec2_ebs_volumes_encrypted_by_default = Resources.*[ Type == 'AWS::EC2::Volume' 
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "EC2_EBS_ENCRYPTION_BY_DEFAULT"
+]
+
+rule EC2_EBS_ENCRYPTION_BY_DEFAULT when %ec2_ebs_volumes_encrypted_by_default !empty {
+    %ec2_ebs_volumes_encrypted_by_default.Properties.Encrypted == true 
+		<<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 2.2.1    
+			Violation: All EBS Volumes should be encryped 
+			Fix: Set Encrypted property to true
+		>>
+}
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    RDS_SNAPSHOT_ENCRYPTED
+#
+# Description:
+#    Checks whether Amazon Relational Database Service (Amazon RDS) DB snapshots are encrypted.
+#
+#
+# Reports on:
+#    AWS::RDS::DBInstance
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no RDS instances present
+# b) PASS: when all RDS instances have StorageEncrypted set to true
+# c) FAIL: when all RDS instances have StorageEncrypted set to false
+# d) FAIL: when there are RDS instances with StorageEncrypted property is not present
+# e) SKIP: when metadata includes the suppression for rule RDS_SNAPSHOT_ENCRYPTED
+
+#
+# Select all RDS instance resources from incoming template (payload)
+#
+let aws_rds_instances_snapshot_encrypted = Resources.*[ Type == 'AWS::RDS::DBInstance'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "RDS_SNAPSHOT_ENCRYPTED"
+]
+
+
+rule RDS_SNAPSHOT_ENCRYPTED when %aws_rds_instances_snapshot_encrypted !empty {
+  %aws_rds_instances_snapshot_encrypted.Properties.StorageEncrypted EXISTS
+  %aws_rds_instances_snapshot_encrypted.Properties.StorageEncrypted == true
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 2.3.1    
+    Violation: All RDS instances must have snapshots encrypted.
+    Fix: Set the StorageEncrypted parameter to true so by default all snapshots are encrypted.
+  >>
+}
+
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    RDS_STORAGE_ENCRYPTED
+#
+# Description:
+#    Checks whether storage encryption is enabled for your RDS DB instances.
+#
+#
+# Reports on:
+#    AWS::RDS::DBInstance
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no RDS instances present
+# b) PASS: when all RDS instances have StorageEncrypted set to true
+# c) FAIL: when all RDS instances have StorageEncrypted set to false
+# d) FAIL: when there are RDS instances with StorageEncrypted property is not present
+# e) SKIP: when metadata includes the suppression for rule RDS_STORAGE_ENCRYPTED
+
+#
+# Select all RDS instance resources from incoming template (payload)
+#
+let aws_rds_instances_storage_encrypted = Resources.*[ Type == 'AWS::RDS::DBInstance'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "RDS_STORAGE_ENCRYPTED"
+]
+
+
+rule RDS_STORAGE_ENCRYPTED when %aws_rds_instances_storage_encrypted !empty {
+  %aws_rds_instances_storage_encrypted.Properties.StorageEncrypted EXISTS
+  %aws_rds_instances_storage_encrypted.Properties.StorageEncrypted == true
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 2.3.1    
+    Violation: All RDS instances must have encrypted storage.
+    Fix: Set the StorageEncrypted parameter to true.
+  >>
+}
+
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    S3_BUCKET_PUBLIC_READ_PROHIBITED
+#
+# Description:
+#   Checks if your Amazon S3 buckets do not allow public read access. The rule checks the Block Public
+#   Access settings, the bucket policy, and the bucket access control list (ACL).
+#
+# Reports on:
+#    AWS::S3::Bucket
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no S3 resource present
+# b) PASS: when all S3 resources Public Access Block Configuration element is present and properties are set to true
+# c) FAIL: when all S3 resources do not have the Public Access Block Configuration element present or all properties set to true
+# d) SKIP: when metadata includes the suppression for rule S3_BUCKET_PUBLIC_READ_PROHIBITED
+
+#
+# Select all S3 resources from incoming template (payload)
+#
+let s3_bucket_public_read_prohibited = Resources.*[ Type == 'AWS::S3::Bucket'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "S3_BUCKET_PUBLIC_READ_PROHIBITED"
+]
+
+rule S3_BUCKET_PUBLIC_READ_PROHIBITED when %s3_bucket_public_read_prohibited !empty {
+  %s3_bucket_public_read_prohibited.Properties.PublicAccessBlockConfiguration exists
+  %s3_bucket_public_read_prohibited.Properties.PublicAccessBlockConfiguration.BlockPublicAcls == true
+  %s3_bucket_public_read_prohibited.Properties.PublicAccessBlockConfiguration.BlockPublicPolicy == true
+  %s3_bucket_public_read_prohibited.Properties.PublicAccessBlockConfiguration.IgnorePublicAcls == true
+  %s3_bucket_public_read_prohibited.Properties.PublicAccessBlockConfiguration.RestrictPublicBuckets == true
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 3.3    
+    Violation: S3 Bucket Public Write Access controls need to be restricted.
+    Fix: Set S3 Bucket PublicAccessBlockConfiguration properties for BlockPublicAcls, BlockPublicPolicy, IgnorePublicAcls, RestrictPublicBuckets parameters to true.
+  >>
+}
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    S3_BUCKET_PUBLIC_WRITE_PROHIBITED
+#
+# Description:
+#   Checks if your Amazon S3 buckets do not allow public write access. The rule checks the Block Public
+#   Access settings, the bucket policy, and the bucket access control list (ACL).
+#
+# Reports on:
+#    AWS::S3::Bucket
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no S3 resource present
+# b) PASS: when all S3 resources Public Access Block Configuration element is present and properties are set to true
+# c) FAIL: when all S3 resources do not have the Public Access Block Configuration element present or all properties set to true
+# d) SKIP: when metadata includes the suppression for rule S3_BUCKET_PUBLIC_WRITE_PROHIBITED
+
+#
+# Select all S3 resources from incoming template (payload)
+#
+let s3_buckets_public_write_prohibited = Resources.*[ Type == 'AWS::S3::Bucket'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "S3_BUCKET_PUBLIC_WRITE_PROHIBITED"
+]
+
+rule S3_BUCKET_PUBLIC_WRITE_PROHIBITED when %s3_buckets_public_write_prohibited !empty {
+  %s3_buckets_public_write_prohibited.Properties.PublicAccessBlockConfiguration exists
+  %s3_buckets_public_write_prohibited.Properties.PublicAccessBlockConfiguration.BlockPublicAcls == true
+  %s3_buckets_public_write_prohibited.Properties.PublicAccessBlockConfiguration.BlockPublicPolicy == true
+  %s3_buckets_public_write_prohibited.Properties.PublicAccessBlockConfiguration.IgnorePublicAcls == true
+  %s3_buckets_public_write_prohibited.Properties.PublicAccessBlockConfiguration.RestrictPublicBuckets == true
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 3.3    
+    Violation: S3 Bucket Public Write Access controls need to be restricted.
+    Fix: Set S3 Bucket PublicAccessBlockConfiguration properties for BlockPublicAcls, BlockPublicPolicy, IgnorePublicAcls, RestrictPublicBuckets parameters to true.
+  >>
+}
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    CLOUD_TRAIL_CLOUD_WATCH_LOGS_ENABLED
+#
+# Description:
+#   Checks whether AWS CloudTrail trails are configured to send logs to Amazon CloudWatch logs.
+#   The trail is non-compliant if the CloudWatchLogsLogGroupArn property of the trail is empty.
+#
+# Reports on:
+#    AWS::CloudTrail::Trail
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no CloudTrail Trails present
+# b) PASS: when all CloudTrail Trails have CloudWatchLogsLogGroupArn parameter set
+# c) FAIL: when there are CloudTrail Trails with CloudWatchLogsLogGroupArn property not present
+# d) SKIP: when metada has rule suppression for CLOUD_TRAIL_CLOUD_WATCH_LOGS_ENABLED
+
+#
+# Select all CloudTrail Trail resources from incoming template (payload)
+#
+let cloudtrail_trails_cw_logs_enabled = Resources.*[ Type == 'AWS::CloudTrail::Trail'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "CLOUD_TRAIL_CLOUD_WATCH_LOGS_ENABLED"
+]
+
+rule CLOUD_TRAIL_CLOUD_WATCH_LOGS_ENABLED when %cloudtrail_trails_cw_logs_enabled !empty {
+  %cloudtrail_trails_cw_logs_enabled.Properties.CloudWatchLogsLogGroupArn exists
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 3.4    
+    Violation: CloudTrail Trail should have logs exported to cloudwatch logs.
+    Fix: Set the CloudWatchLogsLogGroupArn parameter to enable exporting to CloudWatch Logs.
+  >>
+}
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    S3_BUCKET_LOGGING_ENABLED
+#
+# Description:
+#   Checks whether logging is enabled for your S3 buckets.
+#
+# Reports on:
+#    AWS::S3::Bucket
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no S3 resource present
+# b) PASS: when all S3 resources Logging Configuration exists
+# c) FAIL: when all S3 resources have Logging Configuration is not set
+# d) SKIP: when metadata includes the suppression for rule S3_BUCKET_LOGGING_ENABLED
+
+#
+# Select all S3 resources from incoming template (payload)
+#
+
+let s3_buckets_bucket_logging_enabled = Resources.*[ Type == 'AWS::S3::Bucket'
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "S3_BUCKET_LOGGING_ENABLED"
+]
+
+rule S3_BUCKET_LOGGING_ENABLED when %s3_buckets_bucket_logging_enabled  !empty {
+  %s3_buckets_bucket_logging_enabled.Properties.LoggingConfiguration exists
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 3.6    
+    Violation: S3 Bucket Logging needs to be configured to enable logging.
+    Fix: Set the S3 Bucket property LoggingConfiguration to start logging into S3 bucket.
+  >>
+}
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    INCOMING_SSH_DISABLED
+#
+# Description:
+#    Checks if the incoming SSH traffic for the security groups is accessible. 
+#
+# Reports on:
+#    AWS::EC2::SecurityGroup
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when no Security Group resources are present
+# b) SKIP: when no SSH ingress is defined (port 22)
+# c) PASS: when all Security Groups resources restrict the IP address of the incoming SSH traffic
+# d) FAIL: when a Security Group allows SSH traffic from any IP address (0.0.0.0/0). 
+# e) SKIP: hen metadata includes the suppression for rule INCOMING_SSH_DISABLED
+
+#
+# Select all Security Group resources from incoming template (payload)
+#
+let aws_security_groups_restricted_ssh = Resources.*[ 
+	Type == 'AWS::EC2::SecurityGroup'
+	some Properties.SecurityGroupIngress[*] {
+		ToPort == 22
+		FromPort == 22
+		IpProtocol == "tcp"
+	}
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "INCOMING_SSH_DISABLED"
+]
+
+rule INCOMING_SSH_DISABLED when %aws_security_groups_restricted_ssh !empty {
+	%aws_security_groups_restricted_ssh.Properties.SecurityGroupIngress[*] != {CidrIp:"0.0.0.0/0", ToPort:22, FromPort:22, IpProtocol:"tcp"}
+  <<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 5.2    
+    Violation: IP addresses of the incoming SSH traffic in the security groups are restricted (CIDR other than 0.0.0.0/0)
+    Fix: set SecurityGroupIngress.CidrIp property to a more restrictive CIDR than 0.0.0.0/0
+  >>
+}
+#
+#####################################
+##           Gherkin               ##
+#####################################
+# Rule Identifier:
+#    RESTRICTED_INCOMING_TRAFFIC
+#
+# Description:
+#    Checks if the security groups in use do not allow unrestricted incoming TCP traffic to the specified ports. 
+#
+# Reports on:
+#    AWS::EC2::SecurityGroup
+#
+# Evaluates:
+#    AWS CloudFormation
+#
+# Rule Parameters:
+#    NA
+#
+# Scenarios:
+# a) SKIP: when there are no Security Groups resource present
+# b) SKIP when there are no TCP or UDP ingress rules
+# c) PASS: when all Security Groups do no allow any of the restricted common ports
+# d) FAIL: when a Security Group allows any of the restricted common ports
+# e) SKIP: when metadata includes the suppression for rule RESTRICTED_INCOMING_TRAFFIC
+
+#
+# Select all Security Group resources from incoming template (payload)
+#
+let aws_security_groups_restricted_incoming_traffic = Resources.*[ Type == 'AWS::EC2::SecurityGroup' 
+	some Properties.SecurityGroupIngress[*] {
+		IpProtocol in ['tcp', 'udp']
+	}
+  Metadata.guard.SuppressedRules not exists or
+  Metadata.guard.SuppressedRules.* != "RESTRICTED_INCOMING_TRAFFIC"
+]
+
+rule RESTRICTED_INCOMING_TRAFFIC when %aws_security_groups_restricted_incoming_traffic !empty {
+	let violations = Resources.*[
+		Type == 'AWS::EC2::SecurityGroup'
+		some Properties.SecurityGroupIngress[*] {
+			FromPort in [ 20, 21, 3389, 3306, 4333 ]
+      ToPort in [ 20, 21, 3389, 3306, 4333 ]
+		}
+	]
+	%violations empty 
+	<<
+    Guard Rule Set: cis-aws-benchmark-level-1
+    Controls: 5.2    
+		Violation: Security groups must not allow unrestricted incoming TCP/UDP traffic to the specified ports [20, 21, 3389, 3306, 4333].
+		Fix: change the FromPort and ToPort properties in the SecurityGroupIngress list 
+	>>
+}

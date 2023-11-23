@@ -1,0 +1,64 @@
+{
+  "name": "@release-gateway/aws-cdk-constructs",
+  "version": "0.0.0",
+  "description": "Enterprise ready CDK constructs that are CIS 1.4 and NIST800-53 Rev.5 standards compliant",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint --ext .ts .",
+    "semantic-release": "semantic-release"
+  },
+  "keywords": [],
+  "author": "Christopher Imrie",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ckimrie/aws-cdk-constructs.git"
+  },
+  "publishConfig": {
+    "access": "restricted",
+    "tag": "latest"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@tsconfig/recommended": "^1.0.3",
+    "@types/jest": "^29.5.10",
+    "@types/node": "^20.9.4",
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.1.0",
+    "prettier-2": "npm:prettier@^2",
+    "semantic-release": "^22.0.8",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "release": {
+    "branches": [
+      "master",
+      {
+        "name": "alpha",
+        "prerelease": true
+      }
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/github",
+      "@semantic-release/npm",
+      "@semantic-release/git"
+    ]
+  },
+  "dependencies": {
+    "@cdklabs/cdk-validator-cfnguard": "^0.0.57",
+    "aws-cdk-lib": "^2.110.1",
+    "constructs": "^10.3.0",
+    "eslint-config-node": "^4.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/ckimrie/aws-cdk-constructs/issues"
+  },
+  "homepage": "https://github.com/ckimrie/aws-cdk-constructs#readme"
+}
