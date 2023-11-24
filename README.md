@@ -1,12 +1,14 @@
 # Release Gateway AWS CDK Constructs
 
+[![CI](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/workflow.yml/badge.svg)](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/workflow.yml)
+
 Library of Enterprise ready CDK constructs that are standards compliant with the [CIS 1.4](https://docs.aws.amazon.com/audit-manager/latest/userguide/CIS-1-4.html), [NIST 800-53 Rev5](https://docs.aws.amazon.com/securityhub/latest/userguide/nist-standard.html) and adopting the best practices set out in AWS Well Architected [Reliability](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html) and [Security](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html) Pillars.
 
 This library follows the AWS CDK L1, L2, L3 paradigms and where possible applies the minimum configuration needed to satisfy the cloud standards.
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+Use the package manager npm to install this package:
 
 ```bash
 npm install @release-gateway/aws-cdk-constructs
