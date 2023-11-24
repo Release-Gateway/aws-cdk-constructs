@@ -16,7 +16,7 @@
     "url": "git+https://github.com/ckimrie/aws-cdk-constructs.git"
   },
   "publishConfig": {
-    "access": "restricted",
+    "access": "public",
     "tag": "latest"
   },
   "devDependencies": {
@@ -47,7 +47,6 @@
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       "@semantic-release/changelog",
-      "@semantic-release/github",
       "@semantic-release/npm",
       "@semantic-release/git"
     ]
