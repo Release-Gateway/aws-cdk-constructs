@@ -1,6 +1,6 @@
 {
   "name": "@release-gateway/aws-cdk-constructs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Enterprise ready CDK constructs that are CIS 1.4 and NIST800-53 Rev.5 standards compliant",
   "main": "src/index.js",
   "scripts": {

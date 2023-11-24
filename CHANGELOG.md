@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/ckimrie/aws-cdk-constructs/compare/v1.0.2...v1.0.3) (2023-11-24)
+
+
+### Bug Fixes
+
+* Adds build step to ci release ([8713228](https://github.com/ckimrie/aws-cdk-constructs/commit/8713228edbf89bb20e4783b86c85d57e52d4a493))
+
 ## [1.0.2](https://github.com/ckimrie/aws-cdk-constructs/compare/v1.0.1...v1.0.2) (2023-11-24)
 
 
