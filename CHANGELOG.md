@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/ckimrie/aws-cdk-constructs/compare/v1.0.4...v1.1.0) (2023-11-24)
+
+
+### Features
+
+* Adds RGTable construct ([f3957a9](https://github.com/ckimrie/aws-cdk-constructs/commit/f3957a9ae46c92b5f9fe6af6d8b28d47506a4709))
+
 ## [1.0.4](https://github.com/ckimrie/aws-cdk-constructs/compare/v1.0.3...v1.0.4) (2023-11-24)
 
 
