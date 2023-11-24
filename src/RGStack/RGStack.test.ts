@@ -30,7 +30,7 @@ describe("RGStack", () => {
         expect(stack.tags.tagValues()).toMatchInlineSnapshot(`
       {
         "environment": "dev123",
-        "release-gateway:aws-cdk-construct-version": "0.0.0-development",
+        "release-gateway:aws-cdk-construct-version": "0.0.0",
         "serviceName": "test",
         "version": "1.0.0",
       }
