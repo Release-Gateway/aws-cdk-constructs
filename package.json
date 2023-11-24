@@ -71,7 +71,14 @@
           "pkgRoot": "dist"
         }
       ],
-      "@semantic-release/git"
+      ["@semantic-release/github", {
+        "assets": [
+          {
+            "path": "dist/**",
+            "label": "NPM Package"
+          }
+        ]
+      }]
     ]
   },
   "dependencies": {
