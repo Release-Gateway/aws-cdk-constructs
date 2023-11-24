@@ -2,9 +2,12 @@
   "name": "@release-gateway/aws-cdk-constructs",
   "version": "1.0.1",
   "description": "Enterprise ready CDK constructs that are CIS 1.4 and NIST800-53 Rev.5 standards compliant",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "jest",
+    "prebuild": "rm -rf ./dist",
+    "build": "tsc",
+    "postbuild": "cp -r src/RGGuardValidator/rules ./dist/src/RGGuardValidator/rules",
     "lint": "eslint --ext .ts .",
     "semantic-release": "semantic-release"
   },
@@ -15,6 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/ckimrie/aws-cdk-constructs.git"
   },
+  "typings": "src/index.d.ts",
   "publishConfig": {
     "access": "public",
     "tag": "latest"

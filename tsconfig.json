@@ -20,5 +20,5 @@
     "resolveJsonModule": true,
     "outDir": "dist"
   },
-  "exclude": ["node_modules", "cdk.out", ".github"],
+  "exclude": ["node_modules", "cdk.out", ".github", "**/*.test.ts"]
 }
