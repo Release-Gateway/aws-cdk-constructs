@@ -7,11 +7,11 @@
     "test": "jest",
     "prebuild": "rm -rf ./dist",
     "build": "tsc",
-    "postbuild": "cp -r src/RGGuardValidator/rules ./dist/src/RGGuardValidator/rules",
+    "postbuild": "cp -r src/RGGuardValidator/rules ./dist/src/RGGuardValidator/rules && cp ./README.md ./dist/README.md",
     "lint": "eslint --ext .ts .",
     "semantic-release": "semantic-release"
   },
-  "keywords": [],
+  "keywords": ["cdk", "awscdk", "aws-cdk", "cloudformation", "enterprise", "cis", "nist", "policy-as-code", "compliance", "validator", "cdk-validator-cfnguard"],
   "author": "Christopher Imrie",
   "license": "MIT",
   "repository": {
