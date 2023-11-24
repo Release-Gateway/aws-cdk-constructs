@@ -1,10 +1,11 @@
-import { App } from "aws-cdk-lib";
+import { App, AppProps } from "aws-cdk-lib";
 import { RGGuardValidator } from "../RGGuardValidator/RGGuardValidator";
 
 export class RGApp extends App {
-    constructor() {
+    constructor(props?: AppProps) {
         super({
             policyValidationBeta1: [new RGGuardValidator()],
+            ...props,
         });
     }
 }

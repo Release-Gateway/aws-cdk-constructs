@@ -34,6 +34,18 @@ app.synth()
 
 ```
 
+## Constructs
+
+| Construct name     | Base class        | Description of changes                                                                                                                               |
+|:-------------------|:------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| RGApp              | App               | Includes RGGuardValidator as policy validator                                                                                                        |
+| RGStack            | Stack             | Adds standard tags and creates shared KMS key for use by child resources                                                                             |
+| RGGuardValidator   | CfnGuardValidator | Policy validator configured to enforce CIS 1.4, NIST800-Rev53, Well Architecte Reliabilty Pillar and Well Architected Security Pillar best practices |
+| RGLogGroup         | LogGroup          | Applies kms log encryption, removal policy and sets retention to 1 week                                                                              |
+| RGNodejsFunction   | NodejsFunction    | Makes VPC mandatory, creates lambda log group with encryption, configures DLQ and sets removal policy                                                |
+| RGQueue            | Queue             | Sets KMS encryption, removal policy and configures DLQ                                                                                               |
+
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first

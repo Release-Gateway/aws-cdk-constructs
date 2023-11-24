@@ -15,8 +15,6 @@ export class RGStack extends Stack {
     constructor(scope: Construct, id: string, props: RGStackProps) {
         super(scope, id, props);
 
-        Bucket;
-
         this.tags.setTag("environment", getEnv("NODE_ENV"));
         this.tags.setTag("serviceName", props.serviceName);
         this.tags.setTag("version", props.version);
@@ -24,6 +22,7 @@ export class RGStack extends Stack {
 
         this.kmsKey = new Key(this, "stack-key", {
             removalPolicy: RemovalPolicy.DESTROY,
+            enableKeyRotation: true,
         });
     }
 }
