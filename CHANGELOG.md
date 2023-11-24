@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/ckimrie/aws-cdk-constructs/compare/v1.0.3...v1.0.4) (2023-11-24)
+
+
+### Bug Fixes
+
+* Sets dist folder as npm package root ([7ed58f4](https://github.com/ckimrie/aws-cdk-constructs/commit/7ed58f448a3d30d64cc616569cec3a3d569b1385))
+
 ## [1.0.3](https://github.com/ckimrie/aws-cdk-constructs/compare/v1.0.2...v1.0.3) (2023-11-24)
 
 
