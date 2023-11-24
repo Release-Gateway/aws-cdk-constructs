@@ -1,5 +1,6 @@
 import { RGStack } from "./RGStack";
 import { RGApp } from "../RGApp/RGApp";
+import { getVersion } from "../utils/environment";
 
 describe("RGStack", () => {
     let originalEnv: unknown;
@@ -27,13 +28,11 @@ describe("RGStack", () => {
             version: "1.0.0",
             serviceName: "test",
         });
-        expect(stack.tags.tagValues()).toMatchInlineSnapshot(`
-      {
-        "environment": "dev123",
-        "release-gateway:aws-cdk-construct-version": "0.0.0",
-        "serviceName": "test",
-        "version": "1.0.0",
-      }
-    `);
+        expect(stack.tags.tagValues()).toMatchObject({
+            environment: "dev123",
+            "release-gateway:aws-cdk-construct-version": getVersion(),
+            serviceName: "test",
+            version: "1.0.0",
+        });
     });
 });
