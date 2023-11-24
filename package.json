@@ -28,7 +28,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ckimrie/aws-cdk-constructs.git"
+    "url": "git+https://github.com/Release-Gateway/aws-cdk-constructs.git"
   },
   "typings": "src/index.d.ts",
   "publishConfig": {
@@ -92,7 +92,7 @@
     "eslint-config-node": "^4.1.0"
   },
   "bugs": {
-    "url": "https://github.com/ckimrie/aws-cdk-constructs/issues"
+    "url": "https://github.com/Release-Gateway/aws-cdk-constructs/issues"
   },
-  "homepage": "https://github.com/ckimrie/aws-cdk-constructs#readme"
+  "homepage": "https://github.com/Release-Gateway/aws-cdk-constructs#readme"
 }
