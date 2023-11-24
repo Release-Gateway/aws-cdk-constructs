@@ -2,7 +2,6 @@ import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { getEnv, getVersion } from "../utils/environment";
 import { Key } from "aws-cdk-lib/aws-kms";
-import { Bucket } from "aws-cdk-lib/aws-s3";
 
 export interface RGStackProps extends StackProps {
     serviceName: string;
