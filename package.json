@@ -77,7 +77,7 @@
         {
           "assets": [
             {
-              "path": "dist/**",
+              "path": "dist",
               "label": "NPM Package"
             }
           ]
