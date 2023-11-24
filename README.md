@@ -1,10 +1,12 @@
-# Enterprise ready AWS CDK Constructs
+![Release Gateway](https://raw.githubusercontent.com/Release-Gateway/aws-cdk-constructs/master/logo.png)
+
+# AWS CDK Constructs
 
 [![npm version](https://badge.fury.io/js/@release-gateway%2Faws-cdk-constructs.svg)](https://www.npmjs.com/package/@release-gateway/aws-cdk-constructs) [![CI](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/workflow.yml/badge.svg)](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/workflow.yml)
 
 Library of Enterprise ready CDK constructs that are standards compliant with the [CIS 1.4](https://docs.aws.amazon.com/audit-manager/latest/userguide/CIS-1-4.html), [NIST 800-53 Rev5](https://docs.aws.amazon.com/securityhub/latest/userguide/nist-standard.html) and adopting the best practices set out in AWS Well Architected [Reliability](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html) and [Security](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html) Pillars.
 
-This library follows the AWS CDK L1, L2, L3 paradigms and where possible applies the minimum configuration needed to satisfy the cloud standards.
+This library follows the AWS CDK L1, L2 paradigms and where possible applies the minimum configuration needed to satisfy the cloud standards.
 
 ## Installation
 
@@ -48,7 +50,6 @@ app.synth()
 | RGQueue          | Queue             | Sets KMS encryption, removal policy and configures DLQ                                                                                               |
 | RGTable          | TableV2           | Sets KMS encryption,, removal policy                                                                                                                 |
 
-
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
@@ -59,3 +60,10 @@ Please make sure to update tests as appropriate.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Attribution
+
+Logo Icons
+- Rocket by Gregor Cresnar from [Noun Project](https://thenounproject.com/browse/icons/term/rocket/) (CC BY 3.0)
+- Checklist by Kartika Sholehatin from [Noun Project](https://thenounproject.com/browse/icons/term/checklist/) (CC BY 3.0)
+- Code by Adiyogi from [Noun Project](https://thenounproject.com/browse/icons/term/code/) (CC BY 3.0)
