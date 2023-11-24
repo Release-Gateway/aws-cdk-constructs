@@ -69,7 +69,8 @@
       [
         "@semantic-release/npm",
         {
-          "pkgRoot": "dist"
+          "pkgRoot": "dist",
+          "tarballDir": "dist"
         }
       ],
       [
@@ -77,7 +78,7 @@
         {
           "assets": [
             {
-              "path": "dist",
+              "path": "dist/*.tgz",
               "label": "NPM Package"
             }
           ]
