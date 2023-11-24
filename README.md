@@ -1,6 +1,6 @@
-# Release Gateway AWS CDK Constructs
+# Enterprise ready AWS CDK Constructs
 
-[![CI](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/workflow.yml/badge.svg)](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/workflow.yml)
+[![npm version](https://badge.fury.io/js/@release-gateway%2Faws-cdk-constructs.svg)](https://www.npmjs.com/package/@release-gateway/aws-cdk-constructs) [![CI](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/workflow.yml/badge.svg)](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/workflow.yml)
 
 Library of Enterprise ready CDK constructs that are standards compliant with the [CIS 1.4](https://docs.aws.amazon.com/audit-manager/latest/userguide/CIS-1-4.html), [NIST 800-53 Rev5](https://docs.aws.amazon.com/securityhub/latest/userguide/nist-standard.html) and adopting the best practices set out in AWS Well Architected [Reliability](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html) and [Security](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html) Pillars.
 
