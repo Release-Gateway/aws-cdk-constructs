@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/ckimrie/aws-cdk-constructs/compare/v1.0.1...v1.0.2) (2023-11-24)
+
+
+### Bug Fixes
+
+* Adds typescript typings and cleans up npm module ([c47bd30](https://github.com/ckimrie/aws-cdk-constructs/commit/c47bd30a0da35a518f235acb7141d95b4550d36d))
+
 ## [1.0.1](https://github.com/ckimrie/aws-cdk-constructs/compare/v1.0.0...v1.0.1) (2023-11-24)
 
 
