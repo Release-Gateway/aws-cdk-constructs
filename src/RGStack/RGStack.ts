@@ -2,6 +2,7 @@ import { RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { getEnv, getVersion } from "../utils/environment";
 import { Key } from "aws-cdk-lib/aws-kms";
+import { RGStackPropValidator } from "./RGStackPropValidator";
 
 export interface RGStackProps extends StackProps {
     serviceName: string;
@@ -12,6 +13,8 @@ export class RGStack extends Stack {
     kmsKey: Key;
 
     constructor(scope: Construct, id: string, props: RGStackProps) {
+        RGStackPropValidator.parse(props);
+
         super(scope, id, props);
 
         this.tags.setTag("environment", getEnv("NODE_ENV"));

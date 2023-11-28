@@ -1,4 +1,4 @@
-import { RGStack, RGStackProps } from "../RGStack/RGStack";
+import { RGStack, RGStackProps } from "../../src/RGStack/RGStack";
 import { Construct } from "constructs";
 
 export class TestStack extends RGStack {
