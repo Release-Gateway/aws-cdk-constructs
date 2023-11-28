@@ -6,7 +6,7 @@ import { findRGStackAncestor } from "../utils/constructs";
 export interface RGLogGroupProps extends LogGroupProps {}
 
 export class RGLogGroup extends LogGroup {
-    constructor(scope: Construct, id: string, props: RGLogGroupProps) {
+    constructor(scope: Construct, id: string, props: RGLogGroupProps = {}) {
         const stack = findRGStackAncestor(scope);
 
         if (!stack) throw new Error("RGLogGroup must be used within an RGStack");
