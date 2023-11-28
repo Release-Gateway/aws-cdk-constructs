@@ -1,11 +1,9 @@
 import { TestApp } from "../../tests/utils/TestApp";
-
 import { TestStack } from "../../tests/utils/TestStack";
 import { Template } from "aws-cdk-lib/assertions";
 import { RGTable } from "./";
 import { AttributeType } from "aws-cdk-lib/aws-dynamodb";
 import { Stack } from "aws-cdk-lib";
-import { RGLogGroup } from "../RGLogGroup";
 
 describe("RGQueue", () => {
     describe("Default behaviour", () => {
