@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "test": "jest",
+    "mutation-test": "npx stryker run",
     "prebuild": "rm -rf ./dist",
     "build": "tsc",
     "postbuild": "cp -r src/RGGuardValidator/rules ./dist/src/RGGuardValidator/rules && cp ./README.md ./dist/README.md",
@@ -39,6 +40,8 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^9.2.3",
+    "@stryker-mutator/core": "^7.3.0",
+    "@stryker-mutator/jest-runner": "^7.3.0",
     "@tsconfig/recommended": "^1.0.3",
     "@types/jest": "^29.5.10",
     "@types/node": "^20.9.4",
@@ -90,7 +93,8 @@
     "@cdklabs/cdk-validator-cfnguard": "^0.0.57",
     "aws-cdk-lib": "^2.110.1",
     "constructs": "^10.3.0",
-    "eslint-config-node": "^4.1.0"
+    "eslint-config-node": "^4.1.0",
+    "zod": "^3.22.4"
   },
   "bugs": {
     "url": "https://github.com/Release-Gateway/aws-cdk-constructs/issues"

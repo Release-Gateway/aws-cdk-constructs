@@ -1,4 +1,4 @@
-import { RGApp } from "../RGApp/RGApp";
+import { RGApp } from "../../src/RGApp/RGApp";
 import { readFileSync } from "fs";
 import { join } from "path";
 import { PolicyValidationReportJson } from "aws-cdk-lib/core/lib/validation/private/report";

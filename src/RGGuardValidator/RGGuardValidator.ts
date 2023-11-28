@@ -89,7 +89,14 @@ const defaultProps: RGGuardValidatorProps = {
  * A validator that uses the AWS CloudFormation Guard CLI to validate a stack.
  */
 export class RGGuardValidator extends CfnGuardValidator {
+    public rules: (keyof typeof RULES)[];
     constructor(props: RGGuardValidatorProps = defaultProps) {
         super(props);
+
+        if (!props.rules || props.rules.length === 0) {
+            throw new Error("You must provide at least one rule to the RGGuardValidator");
+        }
+
+        this.rules = props.rules;
     }
 }

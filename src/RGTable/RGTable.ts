@@ -8,9 +8,12 @@ export interface RGTableProps extends TablePropsV2 {}
 export class RGTable extends TableV2 {
     constructor(scope: Construct, id: string, props: RGTableProps) {
         const stack = findRGStackAncestor(scope);
+
+        if (!stack) throw new Error("RGTable must be used within an RGStack");
+
         const defaultProps: Partial<RGTableProps> = {
             removalPolicy: RemovalPolicy.DESTROY,
-            encryption: stack ? TableEncryptionV2.customerManagedKey(stack.kmsKey) : undefined,
+            encryption: TableEncryptionV2.customerManagedKey(stack.kmsKey),
         };
 
         super(scope, id, {
