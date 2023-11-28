@@ -32,9 +32,6 @@ jobs:
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      - name: Mutation Tests
-        run: npm run mutation-test
-        continue-on-error: true
   mutation-test:
     name: Mutation Testing
     runs-on: ubuntu-latest
