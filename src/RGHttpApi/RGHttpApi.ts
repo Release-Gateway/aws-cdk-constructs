@@ -5,9 +5,9 @@ import { findRGStackAncestor } from "../utils/constructs";
 import { RGLogGroup } from "../RGLogGroup";
 import { RGHttpApiPropsValidator } from "./RGHttpApiPropsValidator";
 
-export interface RGHttpApiProps extends Omit<HttpApiProps, "createDefaultStage"> {
-    throttlingBurstLimit?: number;
-    throttlingRateLimit?: number;
+export interface RGHttpApiProps extends HttpApiProps {
+    readonly throttlingBurstLimit?: number;
+    readonly throttlingRateLimit?: number;
 }
 
 export class RGHttpApi extends HttpApi {
@@ -17,6 +17,12 @@ export class RGHttpApi extends HttpApi {
         const stack = findRGStackAncestor(scope);
 
         if (!stack) throw new Error("RGHttpApi must be used within an RGStack");
+
+        if (userProps?.createDefaultStage) {
+            throw new Error(
+                "Constructor property `createDefaultStage` is not supported on RGHttpApi"
+            );
+        }
 
         const defaultProps: RGHttpApiProps & { createDefaultStage: boolean } = {
             throttlingBurstLimit: 10,

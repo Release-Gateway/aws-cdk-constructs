@@ -1,9 +1,9 @@
-import { TestApp } from "../../tests/utils/TestApp";
-import { TestStack } from "../../tests/utils/TestStack";
-import { RGRestApi } from "./RGRestApi";
 import { MockIntegration, PassthroughBehavior } from "aws-cdk-lib/aws-apigateway";
 import { Template } from "aws-cdk-lib/assertions";
 import { Stack } from "aws-cdk-lib";
+import { TestApp } from "./utils/TestApp";
+import { TestStack } from "./utils/TestStack";
+import { RGRestApi } from "../src";
 
 describe("RGHttpApi", () => {
     describe("Default behaviour", () => {

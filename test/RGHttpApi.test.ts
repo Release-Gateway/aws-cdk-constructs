@@ -1,8 +1,8 @@
-import { TestApp } from "../../tests/utils/TestApp";
-import { TestStack } from "../../tests/utils/TestStack";
-import { RGHttpApi } from "./RGHttpApi";
 import { Template } from "aws-cdk-lib/assertions";
 import { Stack } from "aws-cdk-lib";
+import { TestApp } from "./utils/TestApp";
+import { TestStack } from "./utils/TestStack";
+import { RGHttpApi } from "../src";
 
 describe("RGHttpApi", () => {
     describe("Default behaviour", () => {

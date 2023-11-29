@@ -1,10 +1,10 @@
-import { TestApp } from "../../tests/utils/TestApp";
-import { RGNodejsFunction, RGNodejsFunctionProps } from "./";
 import { join } from "path";
-import { testVpc } from "../../tests/utils/vpc";
-import { TestStack } from "../../tests/utils/TestStack";
 import { Match, Template } from "aws-cdk-lib/assertions";
 import { IVpc } from "aws-cdk-lib/aws-ec2";
+import { TestApp } from "./utils/TestApp";
+import { TestStack } from "./utils/TestStack";
+import { testVpc } from "./utils/vpc";
+import { RGNodejsFunction, RGNodejsFunctionProps } from "../src";
 
 describe("RGNodejsFunction", () => {
     describe("Default behaviour", () => {
@@ -17,7 +17,7 @@ describe("RGNodejsFunction", () => {
             stack = new TestStack(app);
             vpc = testVpc(stack, "vpc");
             new RGNodejsFunction(stack, "test-function", {
-                entry: join(__dirname, "../../tests/utils/test-handler.ts"),
+                entry: join(__dirname, "./utils/test-handler.ts"),
                 vpc,
             });
             template = Template.fromStack(stack);
@@ -112,8 +112,8 @@ describe("RGNodejsFunction", () => {
         const stack = new TestStack(app);
         expect(() => {
             new RGNodejsFunction(stack, "test-function", {
-                entry: join(__dirname, "../testing/test-handler.ts"),
+                entry: join(__dirname, "./utils/test-handler.ts"),
             } as RGNodejsFunctionProps);
-        }).toThrow("Constructor property `vpc` is required.");
+        }).toThrow("Constructor property `vpc` is required");
     });
 });

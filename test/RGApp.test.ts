@@ -1,5 +1,4 @@
-import { RGApp } from "./";
-import { RGGuardValidator } from "../RGGuardValidator/";
+import { RGApp, RGGuardValidator } from "../src";
 
 describe("RGApp", () => {
     it("should instantiate without error", () => {

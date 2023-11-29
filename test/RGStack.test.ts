@@ -1,8 +1,8 @@
-import { RGStack, RGStackProps } from "./";
-import { getVersion } from "../utils/environment";
-import { TestApp } from "../../tests/utils/TestApp";
 import { Template } from "aws-cdk-lib/assertions";
 import { Key } from "aws-cdk-lib/aws-kms";
+import { TestApp } from "./utils/TestApp";
+import { RGStack, RGStackProps } from "../src";
+import { getVersion } from "../src/utils/environment";
 
 describe("RGStack", () => {
     let originalEnv: unknown;

@@ -1,7 +1,7 @@
-import { RGNodejsFunctionPropsValidator } from "./RGNodejsFunctionPropsValidator";
 import { Queue } from "aws-cdk-lib/aws-sqs";
-import { TestApp } from "../../tests/utils/TestApp";
-import { TestStack } from "../../tests/utils/TestStack";
+import { RGNodejsFunctionPropsValidator } from "../src/RGNodejsFunction/RGNodejsFunctionPropsValidator";
+import { TestApp } from "./utils/TestApp";
+import { TestStack } from "./utils/TestStack";
 
 describe("RGNodejsFunctionPropsValidator", () => {
     it("should throw expected validation errors", () => {

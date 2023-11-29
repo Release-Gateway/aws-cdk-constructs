@@ -70,9 +70,7 @@ export const RULES: Record<string, string> = {
     "wa-Security-Pillar.guard": join(__dirname, "rules/wa-Security-Pillar.guard"),
 };
 
-export interface RGGuardValidatorProps extends CfnGuardValidatorProps {
-    rules?: (keyof typeof RULES)[];
-}
+export interface RGGuardValidatorProps extends CfnGuardValidatorProps {}
 
 const defaultProps: RGGuardValidatorProps = {
     rules: [

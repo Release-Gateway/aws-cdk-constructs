@@ -7,7 +7,7 @@ import { PolicyValidationReportJson } from "aws-cdk-lib/core/lib/validation/priv
  * A test app that can be used to validate the stack against the cloud standards.
  */
 export class TestApp extends RGApp {
-    private policyValidationReportJson: PolicyValidationReportJson;
+    private policyValidationReportJson: PolicyValidationReportJson | undefined;
 
     constructor() {
         super({
@@ -25,8 +25,13 @@ export class TestApp extends RGApp {
                 readFileSync(join(this.outdir, "policy-validation-report.json")).toString("utf-8")
             );
 
+            if (!this.policyValidationReportJson) {
+                throw new Error("Unable to generate policy validation report");
+            }
+
             if (this.policyValidationReportJson.pluginReports.length > 0) {
                 console.log("Policy validation failures:");
+
                 this.policyValidationReportJson.pluginReports.forEach((r) => console.log(r));
             }
         }

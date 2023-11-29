@@ -5,8 +5,8 @@ import { RGStackPropValidator } from "./RGStackPropValidator";
 import { RGApp } from "../RGApp";
 
 export interface RGStackProps extends StackProps {
-    serviceName: string;
-    version: string;
+    readonly serviceName: string;
+    readonly version: string;
 }
 
 export class RGStack extends Stack {

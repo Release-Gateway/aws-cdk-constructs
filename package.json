@@ -1,107 +1,134 @@
 {
-  "name": "@release-gateway/aws-cdk-constructs",
-  "version": "1.0.3",
-  "description": "Enterprise ready CDK constructs that are CIS 1.4 and NIST800-53 Rev.5 standards compliant",
-  "main": "src/index.js",
-  "scripts": {
-    "test": "jest",
-    "mutation-test": "npx stryker run",
-    "prebuild": "rm -rf ./dist",
-    "build": "tsc",
-    "postbuild": "cp -r src/RGGuardValidator/rules ./dist/src/RGGuardValidator/rules && cp ./README.md ./dist/README.md",
-    "lint": "eslint --ext .ts .",
-    "semantic-release": "semantic-release"
-  },
-  "keywords": [
-    "cdk",
-    "awscdk",
-    "aws-cdk",
-    "cloudformation",
-    "enterprise",
-    "cis",
-    "nist",
-    "policy-as-code",
-    "compliance",
-    "validator",
-    "cdk-validator-cfnguard"
-  ],
-  "author": "Christopher Imrie",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Release-Gateway/aws-cdk-constructs.git"
-  },
-  "typings": "src/index.d.ts",
-  "publishConfig": {
-    "access": "public",
-    "tag": "latest"
-  },
-  "devDependencies": {
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^9.2.3",
-    "@stryker-mutator/core": "^7.3.0",
-    "@stryker-mutator/jest-runner": "^7.3.0",
-    "@tsconfig/recommended": "^1.0.3",
-    "@types/jest": "^29.5.10",
-    "@types/lodash": "^4.14.202",
-    "@types/node": "^20.9.4",
-    "@typescript-eslint/eslint-plugin": "^6.12.0",
-    "esbuild": "^0.19.7",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.1",
-    "prettier": "^3.1.0",
-    "prettier-2": "npm:prettier@^2",
-    "semantic-release": "^22.0.8",
-    "ts-jest": "^29.1.1",
-    "typedoc": "^0.25.3",
-    "typedoc-plugin-markdown": "^3.17.1",
-    "typescript": "^5.2.2"
-  },
-  "release": {
-    "branches": [
-      "main",
-      {
-        "name": "alpha",
-        "prerelease": true
-      }
+    "name": "@release-gateway/aws-cdk-constructs",
+    "version": "0.0.0",
+    "description": "Enterprise ready CDK constructs that are CIS 1.4 and NIST800-53 Rev.5 standards compliant",
+    "main": "src/index.js",
+    "types": "src/index.d.ts",
+    "scripts": {
+        "test": "jest",
+        "mutation-test": "npx stryker run",
+        "build": "jsii",
+        "build:watch": "jsii --watch",
+        "lint": "eslint --ext .ts .",
+        "semantic-release": "semantic-release",
+        "prepackage": "rm -rf ./dist",
+        "package": "jsii-pacmak"
+    },
+    "keywords": [
+        "cdk",
+        "awscdk",
+        "aws-cdk",
+        "cloudformation",
+        "enterprise",
+        "cis",
+        "nist",
+        "policy-as-code",
+        "compliance",
+        "validator",
+        "cdk-validator-cfnguard"
     ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      [
-        "@semantic-release/npm",
-        {
-          "pkgRoot": "dist",
-          "tarballDir": "npm"
-        }
-      ],
-      [
-        "@semantic-release/github",
-        {
-          "assets": [
+    "bundledDependencies": [
+        "lodash",
+        "zod"
+    ],
+    "author": "Christopher Imrie",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Release-Gateway/aws-cdk-constructs.git"
+    },
+    "publishConfig": {
+        "access": "public",
+        "tag": "latest"
+    },
+    "devDependencies": {
+        "@aws-cdk/aws-apigatewayv2-alpha": "2.110.1-alpha.0",
+        "@aws-cdk/aws-apigatewayv2-integrations-alpha": "2.110.1-alpha.0",
+        "@cdklabs/cdk-validator-cfnguard": "0.0.57",
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/exec": "^6.0.3",
+        "@semantic-release/git": "^10.0.1",
+        "@semantic-release/github": "^9.2.3",
+        "@stryker-mutator/core": "^7.3.0",
+        "@stryker-mutator/jest-runner": "^7.3.0",
+        "@tsconfig/recommended": "^1.0.3",
+        "@types/jest": "^29.5.10",
+        "@types/lodash": "^4.14.202",
+        "@types/node": "^20.9.4",
+        "@typescript-eslint/eslint-plugin": "^6.12.0",
+        "aws-cdk-lib": "2.110.1",
+        "constructs": "10.3.0",
+        "esbuild": "^0.19.7",
+        "eslint-config-prettier": "^9.0.0",
+        "eslint-plugin-prettier": "^5.0.1",
+        "jsii": "^5.2.35",
+        "jsii-pacmak": "^1.92.0",
+        "prettier": "^3.1.0",
+        "prettier-2": "npm:prettier@^2",
+        "semantic-release": "^22.0.8",
+        "ts-jest": "^29.1.1",
+        "typedoc": "^0.25.3",
+        "typedoc-plugin-markdown": "^3.17.1",
+        "typescript": "^5.2.2"
+    },
+    "peerDependencies": {
+        "@aws-cdk/aws-apigatewayv2-alpha": "^2.110.1-alpha.0",
+        "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.110.1-alpha.0",
+        "@cdklabs/cdk-validator-cfnguard": "^0.0.57",
+        "aws-cdk-lib": "^2.110.1",
+        "constructs": "^10.3.0"
+    },
+    "dependencies": {
+        "lodash": "^4.17.21",
+        "zod": "^3.22.4"
+    },
+    "release": {
+        "branches": [
+            "main",
             {
-              "path": "npm/*.tgz",
-              "label": "NPM Package"
+                "name": "alpha",
+                "prerelease": true
             }
-          ]
+        ],
+        "plugins": [
+            "@semantic-release/commit-analyzer",
+            "@semantic-release/release-notes-generator",
+            "@semantic-release/changelog",
+            [
+                "@semantic-release/npm",
+                {
+                    "npmPublish": false
+                }
+            ],
+            [
+                "@semantic-release/exec",
+                {
+                    "verifyConditionsCmd": "npm run build",
+                    "prepareCmd": "npm run package"
+                }
+            ]
+        ]
+    },
+    "bugs": {
+        "url": "https://github.com/Release-Gateway/aws-cdk-constructs/issues"
+    },
+    "homepage": "https://github.com/Release-Gateway/aws-cdk-constructs#readme",
+    "stability": "stable",
+    "jsii": {
+        "excludeTypescript": [
+            "test/**"
+        ],
+        "outdir": "dist",
+        "versionFormat": "short",
+        "targets": {
+            "python": {
+                "distName": "release-gateway.aws-cdk-constructs",
+                "module": "release_gateway.aws_cdk_constructs"
+            }
         }
-      ]
+    },
+    "bundleDependencies": [
+        "lodash",
+        "zod"
     ]
-  },
-  "dependencies": {
-    "@aws-cdk/aws-apigatewayv2-alpha": "^2.110.1-alpha.0",
-    "@aws-cdk/aws-apigatewayv2-integrations-alpha": "^2.110.1-alpha.0",
-    "@cdklabs/cdk-validator-cfnguard": "^0.0.57",
-    "aws-cdk-lib": "^2.110.1",
-    "constructs": "^10.3.0",
-    "eslint-config-node": "^4.1.0",
-    "lodash": "^4.17.21",
-    "zod": "^3.22.4"
-  },
-  "bugs": {
-    "url": "https://github.com/Release-Gateway/aws-cdk-constructs/issues"
-  },
-  "homepage": "https://github.com/Release-Gateway/aws-cdk-constructs#readme"
 }

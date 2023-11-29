@@ -1,8 +1,8 @@
-import { TestApp } from "../../tests/utils/TestApp";
-import { RGLogGroup } from "./";
-import { TestStack } from "../../tests/utils/TestStack";
 import { Template } from "aws-cdk-lib/assertions";
 import { Stack } from "aws-cdk-lib";
+import { TestApp } from "./utils/TestApp";
+import { TestStack } from "./utils/TestStack";
+import { RGLogGroup } from "../src";
 
 describe("RGLogGroup", () => {
     describe("Default behaviour", () => {

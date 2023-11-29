@@ -1,4 +1,4 @@
-import { getEnv } from "./environment";
+import { getEnv } from "../src/utils/environment";
 
 describe("Environment utils", () => {
     describe("#getEnv", () => {

@@ -1,4 +1,4 @@
-import { RGGuardValidator, RULES } from "./";
+import { RGGuardValidator, RULES } from "../src";
 
 describe("GuardValidator", () => {
     describe("Default behaviour", () => {

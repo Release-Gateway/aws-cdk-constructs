@@ -5,7 +5,7 @@ import { RemovalPolicy } from "aws-cdk-lib/core";
 import { queueName } from "../utils/naming";
 
 export interface RGQueueProps extends QueueProps {
-    isDeadLetterQueue?: boolean;
+    readonly isDeadLetterQueue?: boolean;
 }
 
 /**

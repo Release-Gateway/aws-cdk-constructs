@@ -18,5 +18,11 @@ export function getEnv(name: string, throwIfNotSet: boolean = true): string {
  * Get the current environment
  */
 export function getVersion(): string {
-    return getPackageProperty("version");
+    const version = getPackageProperty("version");
+
+    if (!version) {
+        throw new Error("Unable to determine package version");
+    }
+
+    return version;
 }

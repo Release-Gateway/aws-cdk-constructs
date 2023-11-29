@@ -1,4 +1,4 @@
-import { getPackageProperty } from "./package";
+import { getPackageProperty } from "../src/utils/package";
 
 describe("Package utils", () => {
     describe("#getPackageProperty", () => {

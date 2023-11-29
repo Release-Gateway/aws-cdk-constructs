@@ -1,8 +1,8 @@
-import { TestApp } from "../../tests/utils/TestApp";
-import { RGQueue } from "./";
-import { TestStack } from "../../tests/utils/TestStack";
 import { Template } from "aws-cdk-lib/assertions";
 import { Stack } from "aws-cdk-lib";
+import { TestApp } from "./utils/TestApp";
+import { TestStack } from "./utils/TestStack";
+import { RGQueue } from "../src";
 
 describe("RGQueue", () => {
     describe("Default behaviour", () => {

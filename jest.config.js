@@ -1,8 +1,7 @@
 module.exports = {
     testEnvironment: "node",
-    roots: ["<rootDir>/src"],
+    roots: ["<rootDir>/test"],
     testMatch: ["**/*.test.ts"],
-    coveragePathIgnorePatterns: ["/src/testing/", "/src/*/index.ts"],
     transform: {
         "^.+\\.tsx?$": "ts-jest",
     },
