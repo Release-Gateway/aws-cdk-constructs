@@ -138,3 +138,6 @@ reports
 
 # snyk
 .dccache
+
+examples/*/cdk.out
+examples/*/cdk.context.json

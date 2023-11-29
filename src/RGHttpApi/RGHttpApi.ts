@@ -2,7 +2,6 @@ import { HttpApi, HttpApiProps, IHttpStage } from "@aws-cdk/aws-apigatewayv2-alp
 import { CfnStage } from "aws-cdk-lib/aws-apigatewayv2";
 import { Construct } from "constructs";
 import { findRGStackAncestor } from "../utils/constructs";
-import { AccessLogFormat, LogGroupLogDestination } from "aws-cdk-lib/aws-apigateway";
 import { RGLogGroup } from "../RGLogGroup";
 import { RGHttpApiPropsValidator } from "./RGHttpApiPropsValidator";
 
@@ -35,7 +34,7 @@ export class RGHttpApi extends HttpApi {
             stageName: "$default",
         });
 
-        const logGroup = new RGLogGroup(scope, `${id}-access-logs`);
+        const logGroup = new RGLogGroup(this, `access-logs`);
         const cfnStage = this.defaultStage.node.defaultChild as CfnStage;
         cfnStage.defaultRouteSettings = {
             throttlingBurstLimit: 10,
@@ -43,7 +42,7 @@ export class RGHttpApi extends HttpApi {
         };
         cfnStage.accessLogSettings = {
             destinationArn: logGroup.logGroupArn,
-            format: '{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","user":"$context.identity.user","caller":"$context.identity.caller","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","resourcePath":"$context.resourcePath","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}',
+            format: '{"requestTime":"$context.requestTime","requestId":"$context.requestId","httpMethod":"$context.httpMethod","path":"$context.path","routeKey":"$context.routeKey","status":$context.status,"responseLatency":$context.responseLatency,"integrationRequestId":"$context.integration.requestId","functionResponseStatus":"$context.integration.status","integrationLatency":"$context.integration.latency","integrationServiceStatus":"$context.integration.integrationStatus","ip":"$context.identity.sourceIp","userAgent":"$context.identity.userAgent","principalId":"$context.authorizer.principalId"}',
         };
     }
 }

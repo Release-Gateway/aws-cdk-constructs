@@ -20,9 +20,13 @@ export class RGRestApi extends RestApi {
 
         const defaultProps: RGRestApiProps = {
             deployOptions: {
-                accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
+                accessLogFormat: AccessLogFormat.custom(
+                    '{"requestTime":"$context.requestTime","requestId":"$context.requestId","httpMethod":"$context.httpMethod","path":"$context.path","resourcePath":"$context.resourcePath","status":$context.status,"responseLatency":$context.responseLatency,"xrayTraceId":"$context.xrayTraceId","integrationRequestId":"$context.integration.requestId","functionResponseStatus":"$context.integration.status","integrationLatency":"$context.integration.latency","integrationServiceStatus":"$context.integration.integrationStatus","ip":"$context.identity.sourceIp","userAgent":"$context.identity.userAgent"}'
+                ),
                 accessLogDestination: new LogGroupLogDestination(
-                    new RGLogGroup(scope, `${id}-access-logs`)
+                    new RGLogGroup(scope, `${id}-access-logs`, {
+                        logGroupName: `${scope.node.path}/${id}/access-logs`,
+                    })
                 ),
                 throttlingBurstLimit: 10,
                 throttlingRateLimit: 10,

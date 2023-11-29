@@ -2,8 +2,7 @@ import { RemovalPolicy } from "aws-cdk-lib";
 import { LogGroup, LogGroupProps, RetentionDays } from "aws-cdk-lib/aws-logs";
 import { Construct } from "constructs";
 import { findRGStackAncestor } from "../utils/constructs";
-import { PolicyStatement, ServicePrincipal, UnknownPrincipal } from "aws-cdk-lib/aws-iam";
-import { IPrincipal } from "aws-cdk-lib/aws-iam/lib/principals";
+import { PolicyStatement, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 
 export interface RGLogGroupProps extends LogGroupProps {}
 
@@ -14,6 +13,7 @@ export class RGLogGroup extends LogGroup {
         if (!stack) throw new Error("RGLogGroup must be used within an RGStack");
 
         const defaultProps: Partial<RGLogGroupProps> = {
+            logGroupName: props.logGroupName || `${scope.node.path}/${id}`,
             removalPolicy: RemovalPolicy.DESTROY,
             retention: RetentionDays.ONE_WEEK,
             encryptionKey: stack.kmsKey,
@@ -37,7 +37,7 @@ export class RGLogGroup extends LogGroup {
                 ],
                 conditions: {
                     ArnLike: {
-                        "kms:EncryptionContext:aws:logs:arn": `arn:aws:logs:${this.stack.region}:${this.stack.account}:log-group:${this.logGroupName}:*`,
+                        "kms:EncryptionContext:aws:logs:arn": `arn:aws:logs:${this.stack.region}:${this.stack.account}:log-group:${defaultProps.logGroupName}`,
                     },
                 },
             })

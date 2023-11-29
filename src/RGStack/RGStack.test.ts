@@ -32,7 +32,7 @@ describe("RGStack", () => {
             expect(stack.tags.tagValues()).toMatchObject({
                 environment: "dev123",
                 "release-gateway:aws-cdk-construct-version": getVersion(),
-                serviceName: "test",
+                "service-name": "test",
                 version: "1.0.0",
             });
         });

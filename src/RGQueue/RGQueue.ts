@@ -2,6 +2,7 @@ import { Queue, QueueEncryption, QueueProps } from "aws-cdk-lib/aws-sqs";
 import { Construct } from "constructs";
 import { findRGStackAncestor } from "../utils/constructs";
 import { RemovalPolicy } from "aws-cdk-lib/core";
+import { queueName } from "../utils/naming";
 
 export interface RGQueueProps extends QueueProps {
     isDeadLetterQueue?: boolean;
@@ -21,6 +22,8 @@ export class RGQueue extends Queue {
             removalPolicy: RemovalPolicy.DESTROY,
             encryptionMasterKey: stack.kmsKey,
             encryption: QueueEncryption.KMS,
+            ...props,
+            queueName: queueName(props?.queueName || `${scope.node.path}/${id}`),
         };
 
         // If this is _NOT_ a dead letter queue, we need to create a dead letter queue
@@ -31,9 +34,6 @@ export class RGQueue extends Queue {
             };
         }
 
-        super(scope, id, {
-            ...(defaultProps as QueueProps),
-            ...props,
-        });
+        super(scope, id, defaultProps as QueueProps);
     }
 }

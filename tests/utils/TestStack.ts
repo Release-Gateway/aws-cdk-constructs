@@ -1,9 +1,9 @@
 import { RGStack, RGStackProps } from "../../src/RGStack/RGStack";
-import { Construct } from "constructs";
+import { RGApp } from "../../src";
 
 export class TestStack extends RGStack {
     constructor(
-        scope: Construct,
+        scope: RGApp,
         id = "test-stack",
         props: RGStackProps = {
             serviceName: "test-service",
