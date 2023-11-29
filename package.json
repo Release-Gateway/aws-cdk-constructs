@@ -109,6 +109,21 @@
                     "prepareCmd": "npm run package",
                     "publishCmd": "npm run publish"
                 }
+            ],
+            [
+                "@semantic-release/github",
+                {
+                    "assets": [
+                        {
+                            "path": "dist/js/**",
+                            "label": "NPM"
+                        },
+                        {
+                            "path": "dist/python/**",
+                            "label": "PyPI"
+                        }
+                    ]
+                }
             ]
         ]
     },
