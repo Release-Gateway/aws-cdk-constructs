@@ -1,4 +1,4 @@
-import { TableEncryptionV2, TablePropsV2, TableV2 } from "aws-cdk-lib/aws-dynamodb";
+import { Billing, TableEncryptionV2, TablePropsV2, TableV2 } from "aws-cdk-lib/aws-dynamodb";
 import { Construct } from "constructs";
 import { RemovalPolicy } from "aws-cdk-lib";
 import { findRGStackAncestor } from "../utils/constructs";
@@ -13,6 +13,7 @@ export class RGTable extends TableV2 {
 
         const defaultProps: Partial<RGTableProps> = {
             removalPolicy: RemovalPolicy.DESTROY,
+            billing: Billing.onDemand(),
             encryption: TableEncryptionV2.customerManagedKey(stack.kmsKey),
         };
 

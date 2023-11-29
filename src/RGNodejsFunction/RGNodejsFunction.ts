@@ -4,6 +4,7 @@ import { IVpc } from "aws-cdk-lib/aws-ec2";
 import { RGQueue } from "../RGQueue";
 import { RGLogGroup } from "../RGLogGroup";
 import { RGNodejsFunctionPropsValidator } from "./RGNodejsFunctionPropsValidator";
+import { lambdaFunctionName } from "../utils/naming";
 
 export interface RGNodejsFunctionProps extends NodejsFunctionProps {
     vpc: IVpc;
@@ -16,12 +17,16 @@ export class RGNodejsFunction extends NodejsFunction {
             reservedConcurrentExecutions: 10,
             allowAllOutbound: false,
             deadLetterQueueEnabled: true,
-            deadLetterQueue: new RGQueue(scope, `${id}-dlq`, { isDeadLetterQueue: true }),
+            deadLetterQueue: new RGQueue(scope, `${id}-dlq`, {
+                isDeadLetterQueue: true,
+                queueName: `${scope.node.path}/${id}/dlq`,
+            }),
+            ...props,
+            functionName: lambdaFunctionName(props.functionName || `${scope.node.path}/${id}`),
         };
 
         const mergedProps: NodejsFunctionProps = {
             ...defaultProps,
-            ...props,
         };
 
         RGNodejsFunctionPropsValidator.parse(mergedProps);
@@ -29,7 +34,7 @@ export class RGNodejsFunction extends NodejsFunction {
         super(scope, id, mergedProps);
 
         new RGLogGroup(this, `logs`, {
-            logGroupName: `/aws/lambda/${this.functionName}`,
+            logGroupName: `/aws/lambda/${defaultProps.functionName}`,
         });
     }
 }

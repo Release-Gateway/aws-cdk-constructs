@@ -72,11 +72,9 @@ describe("RGNodejsFunction", () => {
             expect(Object.keys(dlq).length).toBe(1);
         });
         describe("Log group", () => {
-            let fnLogicalId: string;
             let kmsLogicalId: string;
 
             beforeAll(() => {
-                fnLogicalId = Object.keys(template.findResources("AWS::Lambda::Function"))[0];
                 kmsLogicalId = Object.keys(template.findResources("AWS::KMS::Key"))[0];
             });
 
@@ -92,17 +90,7 @@ describe("RGNodejsFunction", () => {
             });
             it("should be named according to lambda log convention", () => {
                 template.hasResourceProperties("AWS::Logs::LogGroup", {
-                    LogGroupName: {
-                        "Fn::Join": [
-                            "",
-                            [
-                                "/aws/lambda/",
-                                {
-                                    Ref: fnLogicalId,
-                                },
-                            ],
-                        ],
-                    },
+                    LogGroupName: "/aws/lambda/TestStack_TestFunction",
                 });
             });
             it("should have retention configured", () => {
