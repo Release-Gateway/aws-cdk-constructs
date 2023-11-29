@@ -115,12 +115,16 @@
                 {
                     "assets": [
                         {
-                            "path": "dist/js/**",
-                            "label": "NPM"
+                            "path": "dist/js/*.tgz",
+                            "label": "NPM Package"
                         },
                         {
-                            "path": "dist/python/**",
-                            "label": "PyPI"
+                            "path": "dist/python/*.tar.gz",
+                            "label": "PyPI Source Distribution"
+                        },
+                        {
+                            "path": "dist/python/*.whl",
+                            "label": "PyPI Built Distribution"
                         }
                     ]
                 }
