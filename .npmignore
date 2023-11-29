@@ -22,3 +22,5 @@ stryker.config.json
 examples
 coverage
 .github
+.jsii
+CODE_OF_CONDUCT.md

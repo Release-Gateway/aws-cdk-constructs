@@ -12,7 +12,8 @@
         "lint": "eslint --ext .ts .",
         "semantic-release": "semantic-release",
         "prepackage": "rm -rf ./dist",
-        "package": "jsii-pacmak"
+        "package": "jsii-pacmak",
+        "publish": "publib-npm"
     },
     "keywords": [
         "cdk",
@@ -65,6 +66,7 @@
         "jsii-pacmak": "^1.92.0",
         "prettier": "^3.1.0",
         "prettier-2": "npm:prettier@^2",
+        "publib": "^0.2.753",
         "semantic-release": "^22.0.8",
         "ts-jest": "^29.1.1",
         "typedoc": "^0.25.3",
@@ -104,7 +106,8 @@
                 "@semantic-release/exec",
                 {
                     "verifyConditionsCmd": "npm run build",
-                    "prepareCmd": "npm run package"
+                    "prepareCmd": "npm run package",
+                    "publishCmd": "npm run publish"
                 }
             ]
         ]
