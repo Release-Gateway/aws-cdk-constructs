@@ -49,8 +49,8 @@ app.synth()
 | RGNodejsFunction | NodejsFunction    | Makes VPC mandatory, creates lambda log group with encryption, configures DLQ and sets removal policy                                                |
 | RGQueue          | Queue             | Sets KMS encryption, removal policy and configures DLQ                                                                                               |
 | RGTable          | TableV2           | Sets KMS encryption,, removal policy                                                                                                                 |
-| RGHttpApi        | HttpApi           | -                                                                                                                                                    |
-| RGRestApi        | RestApi           | -                                                                                                                                                    |
+| RGHttpApi        | HttpApi           | Sets encrypted access logging and throttling defaults                                                                                                |
+| RGRestApi        | RestApi           | Sets encrypted access and execution logging, throttling defaults, regional endpoint type                                                             |
 
 ## Contributing
 
