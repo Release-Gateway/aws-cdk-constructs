@@ -1,6 +1,6 @@
 import { RGApp } from "../../src";
 import { KitchenSinkStack } from "./KitchenSinkStack";
-import { getEnv } from "aws-cdk-lib/custom-resources/lib/provider-framework/runtime/util";
+import { getEnv } from "../../src/utils/environment";
 
 const app = new RGApp();
 new KitchenSinkStack(app, "kitchen-sink", {

@@ -25,7 +25,7 @@ export class KitchenSinkStack extends RGStack {
             ),
         });
         new RGNodejsFunction(this, "test-nodejs-function", {
-            entry: join(__dirname, "../../tests/utils/test-handler.ts"),
+            entry: join(__dirname, "../../test/utils/test-handler.ts"),
             vpc: Vpc.fromLookup(this, "vpc", { vpcId: getEnv("VPC_ID") }),
         });
         new RGQueue(this, "test-queue");
