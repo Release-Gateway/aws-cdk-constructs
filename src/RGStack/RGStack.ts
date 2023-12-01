@@ -19,8 +19,8 @@ export class RGStack extends Stack {
 
         const envName = getEnv("NODE_ENV");
 
-        this.tags.setTag("environment", envName);
-        this.tags.setTag("service-name", props.serviceName);
+        this.tags.setTag("env", envName);
+        this.tags.setTag("service", props.serviceName);
         this.tags.setTag("version", props.version);
         this.tags.setTag("stack-name", this.stackName);
         this.tags.setTag("release-gateway:aws-cdk-construct-version", getVersion());
