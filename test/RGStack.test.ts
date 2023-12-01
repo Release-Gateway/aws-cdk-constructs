@@ -30,9 +30,9 @@ describe("RGStack", () => {
 
         it("should apply default tags", () => {
             expect(stack.tags.tagValues()).toMatchObject({
-                environment: "dev123",
+                env: "dev123",
                 "release-gateway:aws-cdk-construct-version": getVersion(),
-                "service-name": "test",
+                service: "test",
                 version: "1.0.0",
             });
         });
