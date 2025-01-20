@@ -60,7 +60,7 @@
         "aws-cdk-lib": "2.110.1",
         "constructs": "10.3.0",
         "esbuild": "^0.19.7",
-        "eslint-config-prettier": "^9.0.0",
+        "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-prettier": "^5.0.1",
         "jsii": "^5.2.35",
         "jsii-pacmak": "^1.92.0",
