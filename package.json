@@ -69,7 +69,7 @@
         "publib": "^0.2.753",
         "semantic-release": "^22.0.8",
         "ts-jest": "^29.1.1",
-        "typedoc": "^0.25.3",
+        "typedoc": "^0.28.0",
         "typedoc-plugin-markdown": "^3.17.1",
         "typescript": "^5.2.2"
     },
