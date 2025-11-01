@@ -1,0 +1,118 @@
+queue_rules:
+  - name: default
+    conditions:
+      # Only merge PRs with these conditions
+      - check-success=lint
+      - check-success=test
+
+pull_request_rules:
+  # Automatic rebase when PR becomes outdated
+  - name: automatic rebase when outdated
+    conditions:
+      - -conflict # No merge conflicts
+      - -draft # Not a draft PR
+      - '#commits-behind>0' # PR is behind the base branch
+    actions:
+      rebase:
+        bot_account: mergify[bot]
+
+  # Rebase on label trigger
+  - name: rebase on label
+    conditions:
+      - -conflict
+      - label=rebase
+    actions:
+      rebase:
+        bot_account: mergify[bot]
+      label:
+        remove:
+          - rebase
+
+  # Rebase on comment command
+  - name: rebase on command
+    conditions:
+      - -conflict
+      - or:
+        - body~=(?i)@mergifyio rebase
+        - body~=(?i)@mergify rebase
+        - comment.body~=(?i)@mergifyio rebase
+        - comment.body~=(?i)@mergify rebase
+    actions:
+      rebase:
+        bot_account: mergify[bot]
+
+  # Auto-update Dependabot PRs when they're behind
+  - name: auto-rebase dependabot PRs
+    conditions:
+      - author=dependabot[bot]
+      - -conflict
+      - '#commits-behind>0'
+      - -draft
+    actions:
+      rebase:
+        bot_account: mergify[bot]
+
+  # Auto-update Copilot PRs when they're behind
+  - name: auto-rebase copilot PRs
+    conditions:
+      - author~=^copilot-
+      - -conflict
+      - '#commits-behind>0'
+      - -draft
+    actions:
+      rebase:
+        bot_account: mergify[bot]
+
+  # Add label when PR has conflicts
+  - name: label conflicting PRs
+    conditions:
+      - conflict
+    actions:
+      label:
+        add:
+          - conflict
+      comment:
+        message: |
+          This pull request has merge conflicts that must be resolved before it can be merged.
+          Please rebase your branch on the latest changes from the base branch.
+
+  # Remove conflict label when resolved
+  - name: remove conflict label when resolved
+    conditions:
+      - -conflict
+      - label=conflict
+    actions:
+      label:
+        remove:
+          - conflict
+
+  # Auto-merge for dependabot PRs (optional - requires approval workflow)
+  - name: auto-merge dependabot PRs
+    conditions:
+      - author=dependabot[bot]
+      - check-success=lint
+      - check-success=test
+      - -conflict
+      - -draft
+      - label!=do-not-merge
+    actions:
+      queue:
+        name: default
+        method: squash
+        commit_message_template: |
+          {{ title }} (#{{ number }})
+          
+          {{ body }}
+
+  # Request review for bot PRs
+  - name: request review for AI bot PRs
+    conditions:
+      - author~=^copilot-
+      - -closed
+      - -draft
+    actions:
+      comment:
+        message: |
+          🤖 This PR was created by an AI bot. Please review the changes carefully before merging.
+          
+          To rebase this PR, add the `rebase` label or comment `@mergifyio rebase`.
