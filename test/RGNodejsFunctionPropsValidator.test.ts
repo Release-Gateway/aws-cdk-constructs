@@ -38,7 +38,7 @@ describe("RGNodejsFunctionPropsValidator", () => {
               },
               {
                 "code": "custom",
-                "message": "Input not instance of Queue",
+                "message": "Input not instance of Queue2",
                 "fatal": true,
                 "path": [
                   "deadLetterQueue"

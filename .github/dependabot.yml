@@ -5,7 +5,36 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
       interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      aws-cdk:
+        patterns:
+          - "@aws-cdk/*"
+          - "aws-cdk-lib"
+          - "constructs"
+      semantic-release:
+        patterns:
+          - "@semantic-release/*"
+          - "semantic-release"
+      stryker:
+        patterns:
+          - "@stryker-mutator/*"
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"
+          - "@typescript-eslint/*"
+      jsii:
+        patterns:
+          - "jsii"
+          - "jsii-pacmak"
+          - "publib"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
