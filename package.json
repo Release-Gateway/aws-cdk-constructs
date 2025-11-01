@@ -61,9 +61,10 @@
         "aws-cdk-lib": "2.221.1",
         "constructs": "10.4.2",
         "esbuild": "^0.25.11",
-        "eslint": "^8.57.1",
+        "eslint": "^9.39.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-prettier": "^5.5.4",
+        "globals": "^16.5.0",
         "jsii": "^5.9.10",
         "jsii-pacmak": "^1.118.0",
         "prettier": "^3.6.2",
@@ -73,7 +74,8 @@
         "ts-jest": "^29.4.5",
         "typedoc": "^0.28.14",
         "typedoc-plugin-markdown": "^4.9.0",
-        "typescript": "^5.9.3"
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.46.2"
     },
     "peerDependencies": {
         "@aws-cdk/aws-apigatewayv2-alpha": "^2.114.1-alpha.0",
