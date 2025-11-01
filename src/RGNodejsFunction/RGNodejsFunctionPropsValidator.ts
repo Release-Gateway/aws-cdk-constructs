@@ -14,7 +14,7 @@ export const RGNodejsFunctionPropsValidator = zod
                     vpcId: zod.string(),
                 },
                 {
-                    required_error: "Constructor property `vpc` is required.",
+                    message: "Constructor property `vpc` is required.",
                 }
             )
             .required(),

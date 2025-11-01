@@ -66,11 +66,11 @@ describe("RGStack", () => {
         const app = new TestApp();
         expect(() => {
             new RGStack(app, "RGStack", { serviceName: "", version: "1.0.0" });
-        }).toThrow("String must contain at least 1 character");
+        }).toThrow("Too small: expected string to have >=1 characters");
         expect(() => {
             // @ts-expect-error Intentionally passing null to test validation
             new RGStack(app, "RGStack", { serviceName: null, version: "1.0.0" });
-        }).toThrow("Expected string, received null");
+        }).toThrow("Constructor property `serviceName` is required.");
     });
 
     it("should throw if no version is set", () => {
@@ -79,17 +79,17 @@ describe("RGStack", () => {
             new RGStack(app, "RGStack", {
                 serviceName: "test",
             } as RGStackProps);
-        }).toThrow("Constructor property `version` is required");
+        }).toThrow("Constructor property `version` is required.");
     });
 
     it("should throw if version is empty", () => {
         const app = new TestApp();
         expect(() => {
             new RGStack(app, "RGStack", { serviceName: "test", version: "" });
-        }).toThrow("String must contain at least 1 character");
+        }).toThrow("Too small: expected string to have >=1 characters");
         expect(() => {
             // @ts-expect-error Intentionally passing null to test validation
             new RGStack(app, "RGStack", { serviceName: "test", version: null });
-        }).toThrow("Expected string, received null");
+        }).toThrow("Constructor property `version` is required.");
     });
 });
