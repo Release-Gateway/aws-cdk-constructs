@@ -4195,7 +4195,7 @@
   },
   "name": "@release-gateway/aws-cdk-constructs",
   "readme": {
-    "markdown": "![Release Gateway](https://raw.githubusercontent.com/Release-Gateway/aws-cdk-constructs/master/logo.png)\n\n# AWS CDK Constructs\n\n[![npm version](https://badge.fury.io/js/@release-gateway%2Faws-cdk-constructs.svg)](https://www.npmjs.com/package/@release-gateway/aws-cdk-constructs) [![CI](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/Release-Gateway/aws-cdk-constructs/graph/badge.svg?token=QI7BVOB3SA)](https://codecov.io/gh/Release-Gateway/aws-cdk-constructs)\n\nLibrary of Enterprise ready CDK constructs that are standards compliant with the [CIS 1.4](https://docs.aws.amazon.com/audit-manager/latest/userguide/CIS-1-4.html), [NIST 800-53 Rev5](https://docs.aws.amazon.com/securityhub/latest/userguide/nist-standard.html) and adopting the best practices set out in AWS Well Architected [Reliability](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html) and [Security](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html) Pillars.\n\nThis library follows the AWS CDK L1, L2, L3 paradigms and where possible applies the minimum configuration needed to satisfy the cloud standards.\n\n## Why does this exist?\n\n[AWS CDK]([url](https://aws.amazon.com/cdk/)) is amazing but out of the box it does not enforce any cloud standards for security, reliability etc for the infrastructure it deploys.  With the [AWS shared responsibility model](https://aws.amazon.com/compliance/shared-responsibility-model/)), the cloud is secure but it is your responsonsibility to be secure _in_ the cloud.\n\nGiven AWS' vast surface area and configurability, this responsibility of deploying software can be daunting, leading many engineers to shy away from getting involved in infrustructure.\n\nThe goal of this repo is to provide native AWS CDK construct alternatives that are cloud standards compliant by default. The hope is that this lowers the barrier to entry for application engineers to get involved in managing and deploying their own infrastructure as code, since the building blocks they are using are known to be standards compliant.\n\nAdditionally, this repo provides a validator you can wire into your CDK Apps, which lets engineers ensure that _the way_ CDK constructs have been assembled and wired together is compliant.\n\nThis result in secure cloud applications with application engineers able to own their infrastructure safely. Win!\n\n## How does it work?\n\nWe use policy-as-code tools such as [Cloudformation Guard](https://docs.aws.amazon.com/cfn-guard/latest/ug/what-is-guard.html) to determine whether default constructs such as `Function`, `ApiGateway`, `SecurityGroups`, `DynamoDB` (and many more) are compliant out of the box.\n\nIf they are not compliant by default, we create an equivalent CDK class construct that _inherits_ from the AWS construct and implements the necessary config changes to nudge the resulting infrastructure into compliance.\n\nFor example, some cloud standards require Cloudwatch Log Groups to be encrypted.  So for our `RGLogGroup` equivalent, we configure the encryption for you under the hood, but you can still use the CDK `RGLogGroup` construct in exactly the same way as `LogGroup` since one inherits from the other.\n\n## Installation\n\nUse the package manager npm to install this package:\n\n```bash\nnpm install @release-gateway/aws-cdk-constructs\n```\n\n## Usage\n\n```typescript\nimport { RGApp, RGStack, RGStackProps } from \"@release-gateway/aws-cdk-constructs\"\n\nclass MyStackStack extends RGStack {\n  constructor(scope: RGApp, id: string, props: RGStackProps) {\n    super(scope, id, props);\n    // Define your stack...\n  }\n}\n\n// Build and synthesize\nconst app = new RGApp();\nnew MyStack(app, \"my-stack\", {\n  serviceName: \"My Service Name\",\n  version: \"1.0.0\"\n})\napp.synth()\n\n```\n\n## Constructs\n\n| Construct name   | Base class        | Description of changes                                                                                                                               |\n|:-----------------|:------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------|\n| RGApp            | App               | Includes RGGuardValidator as policy validator                                                                                                        |\n| RGStack          | Stack             | Adds standard tags and creates shared KMS key for use by child resources                                                                             |\n| RGGuardValidator | CfnGuardValidator | Policy validator configured to enforce CIS 1.4, NIST800-Rev53, Well Architecte Reliabilty Pillar and Well Architected Security Pillar best practices |\n| RGLogGroup       | LogGroup          | Applies kms log encryption, removal policy and sets retention to 1 week                                                                              |\n| RGNodejsFunction | NodejsFunction    | Makes VPC mandatory, creates lambda log group with encryption, configures DLQ and sets removal policy                                                |\n| RGQueue          | Queue             | Sets KMS encryption, removal policy and configures DLQ                                                                                               |\n| RGTable          | TableV2           | Sets KMS encryption,, removal policy                                                                                                                 |\n| RGHttpApi        | HttpApi           | Sets encrypted access logging and throttling defaults                                                                                                |\n| RGRestApi        | RestApi           | Sets encrypted access and execution logging, throttling defaults, regional endpoint type                                                             |\n\n## Contributing\n\nPull requests are welcome. For major changes, please open an issue first\nto discuss what you would like to change.\n\nPlease make sure to update tests as appropriate.\n\n## License\n\n[MIT](https://choosealicense.com/licenses/mit/)\n\n## Attribution\n\nLogo Icons\n- Rocket by Gregor Cresnar from [Noun Project](https://thenounproject.com/browse/icons/term/rocket/) (CC BY 3.0)\n- Checklist by Kartika Sholehatin from [Noun Project](https://thenounproject.com/browse/icons/term/checklist/) (CC BY 3.0)\n- Code by Adiyogi from [Noun Project](https://thenounproject.com/browse/icons/term/code/) (CC BY 3.0)\n"
+    "markdown": "![Release Gateway](https://raw.githubusercontent.com/Release-Gateway/aws-cdk-constructs/master/logo.png)\n\n# AWS CDK Constructs\n\n[![npm version](https://badge.fury.io/js/@release-gateway%2Faws-cdk-constructs.svg)](https://www.npmjs.com/package/@release-gateway/aws-cdk-constructs) [![CI](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/Release-Gateway/aws-cdk-constructs/graph/badge.svg?token=QI7BVOB3SA)](https://codecov.io/gh/Release-Gateway/aws-cdk-constructs)\n\n> Enterprise-ready AWS CDK constructs that are compliant with [CIS 1.4](https://docs.aws.amazon.com/audit-manager/latest/userguide/CIS-1-4.html), [NIST 800-53 Rev5](https://docs.aws.amazon.com/securityhub/latest/userguide/nist-standard.html), and AWS Well-Architected [Reliability](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html) and [Security](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html) best practices by default.\n\n## Table of Contents\n\n- [About](#about)\n- [Features](#features)\n- [Why Use This Library?](#why-use-this-library)\n- [How It Works](#how-it-works)\n- [Adoption Strategy](#adoption-strategy)\n- [Installation](#installation)\n- [Quick Start](#quick-start)\n- [Available Constructs](#available-constructs)\n- [Examples](#examples)\n- [Documentation](#documentation)\n- [Contributing](#contributing)\n- [Support](#support)\n- [License](#license)\n- [Attribution](#attribution)\n\n## About\n\nThis library provides drop-in replacements for standard AWS CDK constructs that automatically apply security and reliability best practices. Built following the AWS CDK L1, L2, and L3 paradigms, these constructs require minimal configuration while ensuring compliance with enterprise cloud standards.\n\n## Features\n\n✨ **Security by Default** - All constructs enforce encryption, secure configurations, and compliance standards out of the box\n\n🛡️ **Universal Compliance Validation** - `RGApp` validates ALL child constructs for compliance, whether they're from this library, native AWS CDK, or your own custom constructs\n\n🔄 **Drop-in Replacements** - Extend native CDK constructs, so you can use them with familiar APIs and patterns\n\n📋 **Multi-Standard Compliance** - Meets CIS 1.4, NIST 800-53 Rev5, and AWS Well-Architected Framework requirements\n\n🚀 **Incremental Adoption** - Start with just `RGApp` for visibility, then migrate constructs at your own pace—no need for a full rewrite\n\n## Why Use This Library?\n\n[AWS CDK](https://aws.amazon.com/cdk/) is a powerful infrastructure-as-code framework, but it doesn't enforce security, reliability, or compliance standards by default. According to the [AWS Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/), while AWS secures the cloud infrastructure, you're responsible for security _in_ the cloud.\n\nGiven AWS's vast surface area and configurability, deploying secure, compliant infrastructure can be daunting. This often leads engineers to avoid infrastructure management altogether.\n\n**This library solves these challenges by providing:**\n\n- **Standards-compliant building blocks** that work like native CDK constructs\n- **Built-in validation** to ensure your infrastructure assembly is compliant\n- **Reduced cognitive load** so engineers can focus on business logic, not security configurations\n\nThe result: secure cloud applications with application engineers confidently owning their infrastructure. Win! 🎉\n\n## How It Works\n\nWe use policy-as-code tools like [CloudFormation Guard](https://docs.aws.amazon.com/cfn-guard/latest/ug/what-is-guard.html) to verify whether default CDK constructs such as `Function`, `ApiGateway`, `SecurityGroup`, and `DynamoDB` are compliant out of the box.\n\nWhen default constructs don't meet compliance standards, we create equivalent CDK constructs that **inherit** from the AWS construct and automatically apply the necessary configurations to achieve compliance.\n\n**Example:** Some cloud standards require CloudWatch Log Groups to be encrypted. Our `RGLogGroup` construct automatically configures encryption for you, but you can use it exactly like the native CDK `LogGroup` construct since one inherits from the other.\n\n```typescript\n// Instead of:\nimport { LogGroup } from 'aws-cdk-lib/aws-logs';\n\n// Use:\nimport { RGLogGroup } from '@release-gateway/aws-cdk-constructs';\n```\n\nThe API remains familiar, but compliance is built in.\n\n## Adoption Strategy\n\n**You don't need to rewrite your entire infrastructure to benefit from this library.** The beauty of this approach is its flexibility—adopt at your own pace.\n\n### Start with Just RGApp\n\nThe fastest way to gain compliance visibility is to simply replace `App` with `RGApp` in your existing CDK application:\n\n```typescript\n// Before\nimport { App } from 'aws-cdk-lib';\nconst app = new App();\n\n// After - instant compliance validation for ALL your constructs\nimport { RGApp } from '@release-gateway/aws-cdk-constructs';\nconst app = new RGApp();\n```\n\n**This single change validates your entire stack**, including:\n- Native AWS CDK constructs (`Function`, `Bucket`, `Table`, etc.)\n- Custom constructs you've built\n- Third-party constructs from other libraries\n- Constructs from this library\n\nYou'll immediately see which resources are compliant and which need attention—**without changing a single line of infrastructure code**.\n\n### Mix and Match Constructs\n\nAs you identify non-compliant resources, you can incrementally replace them with compliant equivalents from this library:\n\n```typescript\nimport { RGApp, RGStack, RGLogGroup } from '@release-gateway/aws-cdk-constructs';\nimport { Function } from 'aws-cdk-lib/aws-lambda'; // Native CDK construct\nimport { Bucket } from 'aws-cdk-lib/aws-s3';       // Native CDK construct\n\nconst app = new RGApp(); // Validates everything\n\nclass MyStack extends RGStack {\n  constructor(scope: RGApp, id: string, props: RGStackProps) {\n    super(scope, id, props);\n\n    // Mix compliant constructs from this library...\n    const logs = new RGLogGroup(this, 'Logs', { /* ... */ });\n\n    // ...with native CDK constructs (RGApp will validate these too)\n    const bucket = new Bucket(this, 'Bucket', { /* ... */ });\n    const lambda = new Function(this, 'Lambda', { /* ... */ });\n  }\n}\n```\n\n**RGApp will validate all of these constructs**, flagging any compliance issues before deployment. You can then prioritize which constructs to migrate based on your compliance requirements and timeline.\n\n### Adoption Paths\n\n**Path 1: Visibility First**\n1. Replace `App` with `RGApp`\n2. Review compliance report\n3. Make fixes where needed\n\n**Path 2: New Projects**\n- Start with `RGApp` and `RGStack`\n- Use compliant constructs from this library from day one\n- Build secure infrastructure from the ground up\n\n**Path 3: Gradual Migration**\n1. Add `RGApp` for visibility\n2. Migrate high-risk resources first (databases, APIs, storage)\n3. Replace remaining constructs over time\n4. Maintain mixed environment during transition\n\nThe key message: **This is not an all-or-nothing approach.** Every construct you adopt improves your security posture, and `RGApp` ensures you always know where you stand.\n\n## Installation\n\n### Prerequisites\n\n- Node.js 16.x or later\n- AWS CDK 2.221.1 or later\n- An AWS account with appropriate permissions\n\n### Install via npm\n\n```bash\nnpm install @release-gateway/aws-cdk-constructs\n```\n\n### Install via Yarn\n\n```bash\nyarn add @release-gateway/aws-cdk-constructs\n```\n\n### Python Support\n\n```bash\npip install release-gateway.aws-cdk-constructs\n```\n\n## Quick Start\n\n### Option 1: Add Compliance Validation to an Existing App\n\nThe simplest way to get started is to add compliance validation to your existing CDK app:\n\n```typescript\n// Replace this:\nimport { App } from 'aws-cdk-lib';\nconst app = new App();\n\n// With this:\nimport { RGApp } from '@release-gateway/aws-cdk-constructs';\nconst app = new RGApp();\n\n// That's it! RGApp now validates all your existing constructs for compliance\n```\n\n### Option 2: Build a New Compliant Stack\n\nFor new projects, use both `RGApp` and `RGStack` for complete compliance:\n\n```typescript\nimport { RGApp, RGStack, RGStackProps } from '@release-gateway/aws-cdk-constructs';\n\nclass MyStack extends RGStack {\n  constructor(scope: RGApp, id: string, props: RGStackProps) {\n    super(scope, id, props);\n\n    // Your infrastructure code here - all constructs will be validated for compliance\n  }\n}\n\n// Initialize and synthesize your CDK app\nconst app = new RGApp();\nnew MyStack(app, 'my-stack', {\n  serviceName: 'My Service Name',\n  version: '1.0.0'\n});\napp.synth();\n```\n\n**Key Point:** `RGApp` automatically validates ALL constructs in your stack—whether they're from this library, native AWS CDK, or custom constructs you've created. This gives you complete visibility into your compliance posture.\n\n## Available Constructs\n\nAll constructs extend their AWS CDK counterparts and add compliance configurations automatically.\n\n| Construct         | Extends           | Key Compliance Features                                                                                                       |\n|:------------------|:------------------|:------------------------------------------------------------------------------------------------------------------------------|\n| **RGApp**         | App               | **Validates ALL child constructs for compliance**—including native CDK, custom, and third-party constructs. Not just constructs from this library! |\n| **RGStack**       | Stack             | Adds standard tags and creates shared KMS key for child resources                                                             |\n| **RGGuardValidator** | CfnGuardValidator | Validates against CIS 1.4, NIST 800-53 Rev5, and AWS Well-Architected Reliability & Security best practices                   |\n| **RGLogGroup**    | LogGroup          | Enforces KMS encryption, configures removal policy, sets 1-week retention                                                     |\n| **RGNodejsFunction** | NodejsFunction  | Requires VPC, creates encrypted log groups, configures DLQ, sets removal policy                                               |\n| **RGQueue**       | Queue             | Enables KMS encryption, configures removal policy and DLQ                                                                     |\n| **RGTable**       | TableV2           | Enables KMS encryption, configures removal policy                                                                             |\n| **RGHttpApi**     | HttpApi           | Configures encrypted access logging and throttling defaults                                                                   |\n| **RGRestApi**     | RestApi           | Enables encrypted access and execution logging, throttling defaults, regional endpoint type                                   |\n\n## Examples\n\nCheck out the [examples directory](./examples) for complete, working examples:\n\n- **[Kitchen Sink](./examples/kitchen-sink)** - Demonstrates all available constructs in a single stack\n\n## Documentation\n\nFor detailed documentation on each construct, including all available properties and methods, please refer to:\n\n- [API Documentation](https://github.com/Release-Gateway/aws-cdk-constructs) (Coming soon)\n- [Examples](./examples)\n- [Source Code](./src)\n\n## Contributing\n\nWe welcome contributions! Whether it's bug reports, feature requests, or code contributions, your input helps make this library better for everyone.\n\n### How to Contribute\n\n1. **Fork the repository** and create your branch from `main`\n2. **Make your changes** and add tests as appropriate\n3. **Ensure tests pass** by running `npm test`\n4. **Lint your code** with `npm run lint`\n5. **Submit a pull request** with a clear description of your changes\n\nPlease read our [Code of Conduct](./CODE_OF_CONDUCT.md) before contributing.\n\n### Reporting Issues\n\nFound a bug or have a feature request? Please [open an issue](https://github.com/Release-Gateway/aws-cdk-constructs/issues) with:\n- A clear, descriptive title\n- Steps to reproduce (for bugs)\n- Expected vs actual behavior\n- Your environment details (Node version, CDK version, etc.)\n\n### Development Setup\n\n```bash\n# Clone the repository\ngit clone https://github.com/Release-Gateway/aws-cdk-constructs.git\ncd aws-cdk-constructs\n\n# Install dependencies\nnpm install\n\n# Run tests\nnpm test\n\n# Build the library\nnpm run build\n\n# Lint code\nnpm run lint\n```\n\n## Support\n\n- **Issues**: [GitHub Issues](https://github.com/Release-Gateway/aws-cdk-constructs/issues)\n- **Discussions**: [GitHub Discussions](https://github.com/Release-Gateway/aws-cdk-constructs/discussions)\n- **Security**: See our [Security Policy](./SECURITY.md) for reporting vulnerabilities\n\n## Roadmap\n\nWe're continuously improving this library. Planned enhancements include:\n\n- Additional compliant constructs (RDS, ECS, EKS, etc.)\n- Support for more compliance frameworks (HIPAA, SOC2, etc.)\n- Comprehensive API documentation website\n- Additional language bindings (Java, C#, Go)\n\nHave ideas? [Open an issue](https://github.com/Release-Gateway/aws-cdk-constructs/issues) to share your suggestions!\n\n## License\n\nThis project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.\n\n## Attribution\n\nLogo Icons\n- Rocket by Gregor Cresnar from [Noun Project](https://thenounproject.com/browse/icons/term/rocket/) (CC BY 3.0)\n- Checklist by Kartika Sholehatin from [Noun Project](https://thenounproject.com/browse/icons/term/checklist/) (CC BY 3.0)\n- Code by Adiyogi from [Noun Project](https://thenounproject.com/browse/icons/term/code/) (CC BY 3.0)\n"
   },
   "repository": {
     "type": "git",
@@ -4212,6 +4212,323 @@
     }
   },
   "types": {
+    "@release-gateway/aws-cdk-constructs.ComplianceFramework": {
+      "assembly": "@release-gateway/aws-cdk-constructs",
+      "docs": {
+        "stability": "stable",
+        "summary": "Compliance frameworks supported by RGGuardValidator."
+      },
+      "fqn": "@release-gateway/aws-cdk-constructs.ComplianceFramework",
+      "kind": "enum",
+      "locationInModule": {
+        "filename": "src/RGGuardValidator/RGGuardValidator.ts",
+        "line": 13
+      },
+      "members": [
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "GUARD_RULES_REGISTRY_ALL_RULES"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "ABS_CCIGV2_MATERIAL"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "ABS_CCIGV2_STANDARD"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "ACSC_ESSENTIAL_8"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "ACSC_ISM"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "APRA_CPG_234"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "BNM_RMIT"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CIS_AWS_BENCHMARK_LEVEL_1"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CIS_AWS_BENCHMARK_LEVEL_2"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CIS_CRITICAL_SECURITY_CONTROLS_V8_IG1"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CIS_CRITICAL_SECURITY_CONTROLS_V8_IG2"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CIS_CRITICAL_SECURITY_CONTROLS_V8_IG3"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CIS_TOP_20"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CISA_CE"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CMMC_LEVEL_1"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CMMC_LEVEL_2"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CMMC_LEVEL_3"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CMMC_LEVEL_4"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "CMMC_LEVEL_5"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "ENISA_CYBERSECURITY_GUIDE_FOR_SMES"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "ENS_HIGH"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "ENS_LOW"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "ENS_MEDIUM"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "FDA_21CFR_PART_11"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "FEDRAMP_LOW"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "FEDRAMP_MODERATE"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "FFIEC"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "HIPAA_SECURITY"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "K_ISMS"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "MAS_NOTICE_655"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "MAS_TRMG"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NBC_TRMG"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NCSC_CAFV3"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NCSC"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NERC"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NIST_800_171"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NIST_800_172"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NIST_800_181"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NIST_1800_25"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NIST_CSF"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NIST_PRIVACY_FRAMEWORK"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NIST800_53_REV4"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NIST800_53_REV5"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "NZISM"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "PCI_DSS_3_2_1"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "RBI_BCSF_UCB"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "RBI_MD_ITF"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "US_NYDFS"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "WA_RELIABILITY_PILLAR"
+        },
+        {
+          "docs": {
+            "stability": "stable"
+          },
+          "name": "WA_SECURITY_PILLAR"
+        }
+      ],
+      "name": "ComplianceFramework",
+      "symbolId": "src/RGGuardValidator/RGGuardValidator:ComplianceFramework"
+    },
     "@release-gateway/aws-cdk-constructs.RGApp": {
       "assembly": "@release-gateway/aws-cdk-constructs",
       "base": "aws-cdk-lib.App",
@@ -4225,14 +4542,14 @@
         },
         "locationInModule": {
           "filename": "src/RGApp/RGApp.ts",
-          "line": 6
+          "line": 31
         },
         "parameters": [
           {
             "name": "props",
             "optional": true,
             "type": {
-              "fqn": "aws-cdk-lib.AppProps"
+              "fqn": "@release-gateway/aws-cdk-constructs.RGAppProps"
             }
           }
         ]
@@ -4240,15 +4557,78 @@
       "kind": "class",
       "locationInModule": {
         "filename": "src/RGApp/RGApp.ts",
-        "line": 3
+        "line": 28
       },
       "name": "RGApp",
       "symbolId": "src/RGApp/RGApp:RGApp"
     },
+    "@release-gateway/aws-cdk-constructs.RGAppProps": {
+      "assembly": "@release-gateway/aws-cdk-constructs",
+      "datatype": true,
+      "docs": {
+        "stability": "stable"
+      },
+      "fqn": "@release-gateway/aws-cdk-constructs.RGAppProps",
+      "interfaces": [
+        "aws-cdk-lib.AppProps"
+      ],
+      "kind": "interface",
+      "locationInModule": {
+        "filename": "src/RGApp/RGApp.ts",
+        "line": 4
+      },
+      "name": "RGAppProps",
+      "properties": [
+        {
+          "abstract": true,
+          "docs": {
+            "default": "[ComplianceFramework.CIS_AWS_BENCHMARK_LEVEL_2,\nComplianceFramework.NIST800_53_REV5,\nComplianceFramework.WA_RELIABILITY_PILLAR,\nComplianceFramework.WA_SECURITY_PILLAR]",
+            "remarks": "If not specified, defaults to CIS AWS Benchmark Level 2,\nNIST 800-53 Rev5, Well-Architected Reliability Pillar,\nand Well-Architected Security Pillar.",
+            "stability": "stable",
+            "summary": "Compliance frameworks to enforce during CDK synthesis."
+          },
+          "immutable": true,
+          "locationInModule": {
+            "filename": "src/RGApp/RGApp.ts",
+            "line": 16
+          },
+          "name": "compliance",
+          "optional": true,
+          "type": {
+            "collection": {
+              "elementtype": {
+                "fqn": "@release-gateway/aws-cdk-constructs.ComplianceFramework"
+              },
+              "kind": "array"
+            }
+          }
+        },
+        {
+          "abstract": true,
+          "docs": {
+            "default": "true",
+            "remarks": "If set to false, validation failures will be reported\nbut will not fail the synthesis.",
+            "stability": "stable",
+            "summary": "Whether to throw an error when compliance validation fails."
+          },
+          "immutable": true,
+          "locationInModule": {
+            "filename": "src/RGApp/RGApp.ts",
+            "line": 25
+          },
+          "name": "throwErrorOnComplianceFail",
+          "optional": true,
+          "type": {
+            "primitive": "boolean"
+          }
+        }
+      ],
+      "symbolId": "src/RGApp/RGApp:RGAppProps"
+    },
     "@release-gateway/aws-cdk-constructs.RGGuardValidator": {
       "assembly": "@release-gateway/aws-cdk-constructs",
-      "base": "@cdklabs/cdk-validator-cfnguard.CfnGuardValidator",
       "docs": {
+        "remarks": "Supports configurable compliance frameworks and error handling.",
         "stability": "stable",
         "summary": "A validator that uses the AWS CloudFormation Guard CLI to validate a stack."
       },
@@ -4259,7 +4639,7 @@
         },
         "locationInModule": {
           "filename": "src/RGGuardValidator/RGGuardValidator.ts",
-          "line": 91
+          "line": 168
         },
         "parameters": [
           {
@@ -4271,20 +4651,107 @@
           }
         ]
       },
+      "interfaces": [
+        "aws-cdk-lib.IPolicyValidationPluginBeta1"
+      ],
       "kind": "class",
       "locationInModule": {
         "filename": "src/RGGuardValidator/RGGuardValidator.ts",
-        "line": 89
+        "line": 160
       },
+      "methods": [
+        {
+          "docs": {
+            "remarks": "This is where the plugin will evaluate the CloudFormation\ntemplates for compliance and report and violations",
+            "stability": "stable",
+            "summary": "The method that will be called by the CDK framework to perform validations."
+          },
+          "locationInModule": {
+            "filename": "src/RGGuardValidator/RGGuardValidator.ts",
+            "line": 181
+          },
+          "name": "validate",
+          "overrides": "aws-cdk-lib.IPolicyValidationPluginBeta1",
+          "parameters": [
+            {
+              "name": "context",
+              "type": {
+                "fqn": "aws-cdk-lib.IPolicyValidationContextBeta1"
+              }
+            }
+          ],
+          "returns": {
+            "type": {
+              "fqn": "aws-cdk-lib.PolicyValidationPluginReportBeta1"
+            }
+          }
+        }
+      ],
       "name": "RGGuardValidator",
       "properties": [
+        {
+          "docs": {
+            "stability": "stable",
+            "summary": "The name of the plugin that will be displayed in the validation report."
+          },
+          "immutable": true,
+          "locationInModule": {
+            "filename": "src/RGGuardValidator/RGGuardValidator.ts",
+            "line": 162
+          },
+          "name": "name",
+          "overrides": "aws-cdk-lib.IPolicyValidationPluginBeta1",
+          "type": {
+            "primitive": "string"
+          }
+        },
+        {
+          "docs": {
+            "remarks": "Used for analytics\npurposes.",
+            "stability": "stable",
+            "summary": "The list of rule IDs that the plugin will evaluate."
+          },
+          "immutable": true,
+          "locationInModule": {
+            "filename": "src/RGGuardValidator/RGGuardValidator.ts",
+            "line": 164
+          },
+          "name": "ruleIds",
+          "optional": true,
+          "overrides": "aws-cdk-lib.IPolicyValidationPluginBeta1",
+          "type": {
+            "collection": {
+              "elementtype": {
+                "primitive": "string"
+              },
+              "kind": "array"
+            }
+          }
+        },
+        {
+          "docs": {
+            "stability": "stable",
+            "summary": "The version of the plugin, following the Semantic Versioning specification (see https://semver.org/). This version is used for analytics purposes, to measure the usage of different plugins and different versions. The value of this property should be kept in sync with the actual version of the software package. If the version is not provided or is not a valid semantic version, it will be reported as `0.0.0`."
+          },
+          "immutable": true,
+          "locationInModule": {
+            "filename": "src/RGGuardValidator/RGGuardValidator.ts",
+            "line": 163
+          },
+          "name": "version",
+          "optional": true,
+          "overrides": "aws-cdk-lib.IPolicyValidationPluginBeta1",
+          "type": {
+            "primitive": "string"
+          }
+        },
         {
           "docs": {
             "stability": "stable"
           },
           "locationInModule": {
             "filename": "src/RGGuardValidator/RGGuardValidator.ts",
-            "line": 90
+            "line": 161
           },
           "name": "rules",
           "type": {
@@ -4312,9 +4779,30 @@
       "kind": "interface",
       "locationInModule": {
         "filename": "src/RGGuardValidator/RGGuardValidator.ts",
-        "line": 73
+        "line": 134
       },
       "name": "RGGuardValidatorProps",
+      "properties": [
+        {
+          "abstract": true,
+          "docs": {
+            "default": "true",
+            "remarks": "If set to false, validation failures will be reported but will not fail the synthesis.",
+            "stability": "stable",
+            "summary": "Whether to throw an error when compliance validation fails."
+          },
+          "immutable": true,
+          "locationInModule": {
+            "filename": "src/RGGuardValidator/RGGuardValidator.ts",
+            "line": 141
+          },
+          "name": "throwErrorOnComplianceFail",
+          "optional": true,
+          "type": {
+            "primitive": "boolean"
+          }
+        }
+      ],
       "symbolId": "src/RGGuardValidator/RGGuardValidator:RGGuardValidatorProps"
     },
     "@release-gateway/aws-cdk-constructs.RGHttpApi": {
@@ -4876,5 +5364,5 @@
     }
   },
   "version": "0.0.0",
-  "fingerprint": "17xHgOATpXh2Uzh7JRsh8s/rCR6by2oaG3DfKGUKgIU="
+  "fingerprint": "Ou0vpn1UwqC4ZqK/pMexplzhbrB/+30iz+lC/gA4+IQ="
 }

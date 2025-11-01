@@ -1,4 +1,4 @@
-import { RGGuardValidator, RULES } from "../src";
+import { RGGuardValidator, RULES, ComplianceFramework } from "../src";
 
 describe("GuardValidator", () => {
     describe("Default behaviour", () => {
@@ -30,6 +30,29 @@ describe("GuardValidator", () => {
         expect(() => {
             new RGGuardValidator({ rules: [] });
         }).toThrow("You must provide at least one rule to the RGGuardValidator");
+    });
+
+    it("should accept custom rules", () => {
+        const customRules = [
+            RULES[ComplianceFramework.HIPAA_SECURITY],
+            RULES[ComplianceFramework.PCI_DSS_3_2_1],
+        ];
+        const guard = new RGGuardValidator({ rules: customRules });
+        expect(guard.rules).toEqual(customRules);
+    });
+
+    it("should set throwErrorOnComplianceFail to true by default", () => {
+        const guard = new RGGuardValidator();
+        expect(guard).toBeDefined();
+        expect(guard.name).toBeDefined();
+    });
+
+    it("should accept throwErrorOnComplianceFail as false", () => {
+        const guard = new RGGuardValidator({
+            rules: [RULES[ComplianceFramework.CIS_AWS_BENCHMARK_LEVEL_1]],
+            throwErrorOnComplianceFail: false,
+        });
+        expect(guard).toBeDefined();
     });
 
     it("should export the full list of supported rules", () => {
@@ -103,5 +126,22 @@ describe("GuardValidator", () => {
             ),
             "wa-Security-Pillar.guard": expect.stringContaining("rules/wa-Security-Pillar.guard"),
         });
+    });
+
+    it("should expose ComplianceFramework enum", () => {
+        expect(ComplianceFramework.CIS_AWS_BENCHMARK_LEVEL_1).toBe(
+            "cis-aws-benchmark-level-1.guard"
+        );
+        expect(ComplianceFramework.CIS_AWS_BENCHMARK_LEVEL_2).toBe(
+            "cis-aws-benchmark-level-2.guard"
+        );
+        expect(ComplianceFramework.NIST800_53_REV4).toBe("NIST800-53Rev4.guard");
+        expect(ComplianceFramework.NIST800_53_REV5).toBe("NIST800-53Rev5.guard");
+        expect(ComplianceFramework.PCI_DSS_3_2_1).toBe("PCI-DSS-3-2-1.guard");
+        expect(ComplianceFramework.HIPAA_SECURITY).toBe("hipaa-security.guard");
+        expect(ComplianceFramework.FEDRAMP_LOW).toBe("FedRAMP-Low.guard");
+        expect(ComplianceFramework.FEDRAMP_MODERATE).toBe("FedRAMP-Moderate.guard");
+        expect(ComplianceFramework.WA_RELIABILITY_PILLAR).toBe("wa-Reliability-Pillar.guard");
+        expect(ComplianceFramework.WA_SECURITY_PILLAR).toBe("wa-Security-Pillar.guard");
     });
 });

@@ -1,6 +1,67 @@
 import { CfnGuardValidator } from "@cdklabs/cdk-validator-cfnguard";
 import { CfnGuardValidatorProps } from "@cdklabs/cdk-validator-cfnguard/lib/plugin";
+import {
+    IPolicyValidationPluginBeta1,
+    IPolicyValidationContextBeta1,
+    PolicyValidationPluginReportBeta1,
+} from "aws-cdk-lib";
 import { join } from "path";
+
+/**
+ * Compliance frameworks supported by RGGuardValidator
+ */
+export enum ComplianceFramework {
+    GUARD_RULES_REGISTRY_ALL_RULES = "guard-rules-registry-all-rules.guard",
+    ABS_CCIGV2_MATERIAL = "ABS-CCIGv2-Material.guard",
+    ABS_CCIGV2_STANDARD = "ABS-CCIGv2-Standard.guard",
+    ACSC_ESSENTIAL_8 = "acsc-essential-8.guard",
+    ACSC_ISM = "acsc-ism.guard",
+    APRA_CPG_234 = "apra-cpg-234.guard",
+    BNM_RMIT = "bnm-rmit.guard",
+    CIS_AWS_BENCHMARK_LEVEL_1 = "cis-aws-benchmark-level-1.guard",
+    CIS_AWS_BENCHMARK_LEVEL_2 = "cis-aws-benchmark-level-2.guard",
+    CIS_CRITICAL_SECURITY_CONTROLS_V8_IG1 = "cis-critical-security-controls-v8-ig1.guard",
+    CIS_CRITICAL_SECURITY_CONTROLS_V8_IG2 = "cis-critical-security-controls-v8-ig2.guard",
+    CIS_CRITICAL_SECURITY_CONTROLS_V8_IG3 = "cis-critical-security-controls-v8-ig3.guard",
+    CIS_TOP_20 = "cis-top-20.guard",
+    CISA_CE = "cisa-ce.guard",
+    CMMC_LEVEL_1 = "cmmc-level-1.guard",
+    CMMC_LEVEL_2 = "cmmc-level-2.guard",
+    CMMC_LEVEL_3 = "cmmc-level-3.guard",
+    CMMC_LEVEL_4 = "cmmc-level-4.guard",
+    CMMC_LEVEL_5 = "cmmc-level-5.guard",
+    ENISA_CYBERSECURITY_GUIDE_FOR_SMES = "enisa-cybersecurity-guide-for-smes.guard",
+    ENS_HIGH = "ens-high.guard",
+    ENS_LOW = "ens-low.guard",
+    ENS_MEDIUM = "ens-medium.guard",
+    FDA_21CFR_PART_11 = "FDA-21CFR-Part-11.guard",
+    FEDRAMP_LOW = "FedRAMP-Low.guard",
+    FEDRAMP_MODERATE = "FedRAMP-Moderate.guard",
+    FFIEC = "ffiec.guard",
+    HIPAA_SECURITY = "hipaa-security.guard",
+    K_ISMS = "K-ISMS.guard",
+    MAS_NOTICE_655 = "mas-notice-655.guard",
+    MAS_TRMG = "mas-trmg.guard",
+    NBC_TRMG = "nbc-trmg.guard",
+    NCSC_CAFV3 = "ncsc-cafv3.guard",
+    NCSC = "ncsc.guard",
+    NERC = "nerc.guard",
+    NIST_800_171 = "nist-800-171.guard",
+    NIST_800_172 = "nist-800-172.guard",
+    NIST_800_181 = "nist-800-181.guard",
+    NIST_1800_25 = "nist-1800-25.guard",
+    NIST_CSF = "nist-csf.guard",
+    NIST_PRIVACY_FRAMEWORK = "nist-privacy-framework.guard",
+    NIST800_53_REV4 = "NIST800-53Rev4.guard",
+    NIST800_53_REV5 = "NIST800-53Rev5.guard",
+    NZISM = "nzism.guard",
+    PCI_DSS_3_2_1 = "PCI-DSS-3-2-1.guard",
+    RBI_BCSF_UCB = "rbi-bcsf-ucb.guard",
+    RBI_MD_ITF = "rbi-md-itf.guard",
+    US_NYDFS = "us-nydfs.guard",
+    WA_RELIABILITY_PILLAR = "wa-Reliability-Pillar.guard",
+    WA_SECURITY_PILLAR = "wa-Security-Pillar.guard",
+}
 
 export const RULES: Record<string, string> = {
     "guard-rules-registry-all-rules.guard": join(
@@ -70,31 +131,69 @@ export const RULES: Record<string, string> = {
     "wa-Security-Pillar.guard": join(__dirname, "rules/wa-Security-Pillar.guard"),
 };
 
-export interface RGGuardValidatorProps extends CfnGuardValidatorProps {}
+export interface RGGuardValidatorProps extends CfnGuardValidatorProps {
+    /**
+     * Whether to throw an error when compliance validation fails.
+     * If set to false, validation failures will be reported but will not fail the synthesis.
+     *
+     * @default true
+     */
+    readonly throwErrorOnComplianceFail?: boolean;
+}
 
 const defaultProps: RGGuardValidatorProps = {
     rules: [
-        RULES["cis-aws-benchmark-level-2.guard"],
-        RULES["NIST800-53Rev5.guard"],
-        RULES["wa-Reliability-Pillar.guard"],
-        RULES["wa-Security-Pillar.guard"],
+        RULES[ComplianceFramework.CIS_AWS_BENCHMARK_LEVEL_2],
+        RULES[ComplianceFramework.NIST800_53_REV5],
+        RULES[ComplianceFramework.WA_RELIABILITY_PILLAR],
+        RULES[ComplianceFramework.WA_SECURITY_PILLAR],
     ],
     // Control tower can conflict with the above rules but also dont support exemptions
     controlTowerRulesEnabled: false,
+    throwErrorOnComplianceFail: true,
 };
 
 /**
  * A validator that uses the AWS CloudFormation Guard CLI to validate a stack.
+ * Supports configurable compliance frameworks and error handling.
  */
-export class RGGuardValidator extends CfnGuardValidator {
-    public rules: (keyof typeof RULES)[];
-    constructor(props: RGGuardValidatorProps = defaultProps) {
-        super(props);
+export class RGGuardValidator implements IPolicyValidationPluginBeta1 {
+    public rules: string[];
+    public readonly name: string;
+    public readonly version?: string;
+    public readonly ruleIds?: string[];
+    private readonly throwErrorOnComplianceFail: boolean;
+    private readonly validator: CfnGuardValidator;
 
+    constructor(props: RGGuardValidatorProps = defaultProps) {
         if (!props.rules || props.rules.length === 0) {
             throw new Error("You must provide at least one rule to the RGGuardValidator");
         }
 
         this.rules = props.rules;
+        this.throwErrorOnComplianceFail = props.throwErrorOnComplianceFail ?? true;
+        this.validator = new CfnGuardValidator(props);
+        this.name = this.validator.name;
+        this.version = this.validator.version;
+        this.ruleIds = this.validator.ruleIds;
+    }
+
+    validate(context: IPolicyValidationContextBeta1): PolicyValidationPluginReportBeta1 {
+        const report = this.validator.validate(context);
+
+        // If throwErrorOnComplianceFail is false, override success to true
+        // to prevent synthesis failure while still reporting violations
+        if (!this.throwErrorOnComplianceFail && !report.success) {
+            return {
+                ...report,
+                success: true,
+                metadata: {
+                    ...report.metadata,
+                    suppressedFailure: "true",
+                },
+            };
+        }
+
+        return report;
     }
 }
