@@ -2,6 +2,19 @@ import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import prettierConfig from "eslint-config-prettier";
 import prettierPlugin from "eslint-plugin-prettier";
+import globals from "globals";
+import { readFileSync } from "fs";
+import { join } from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load Prettier config to sync max-len with printWidth
+const prettierRc = JSON.parse(
+    readFileSync(join(__dirname, ".prettierrc"), "utf-8")
+);
 
 export default [
     {
@@ -21,26 +34,7 @@ export default [
             ecmaVersion: 12,
             sourceType: "module",
             globals: {
-                // Node.js globals
-                console: "readonly",
-                process: "readonly",
-                Buffer: "readonly",
-                __dirname: "readonly",
-                __filename: "readonly",
-                module: "readonly",
-                require: "readonly",
-                exports: "writable",
-                global: "readonly",
-                // Jest globals
-                describe: "readonly",
-                it: "readonly",
-                test: "readonly",
-                expect: "readonly",
-                beforeEach: "readonly",
-                afterEach: "readonly",
-                beforeAll: "readonly",
-                afterAll: "readonly",
-                jest: "readonly",
+                ...globals.node,
             },
         },
         plugins: {
@@ -53,9 +47,9 @@ export default [
             "max-len": [
                 "warn",
                 {
-                    code: 100,
-                    tabWidth: 2,
-                    comments: 100,
+                    code: prettierRc.printWidth,
+                    tabWidth: prettierRc.tabWidth,
+                    comments: prettierRc.printWidth,
                     ignoreComments: false,
                     ignoreTrailingComments: true,
                     ignoreUrls: true,
@@ -64,6 +58,14 @@ export default [
                     ignoreRegExpLiterals: true,
                 },
             ],
+        },
+    },
+    {
+        files: ["**/*.test.ts", "**/*.spec.ts"],
+        languageOptions: {
+            globals: {
+                ...globals.jest,
+            },
         },
     },
 ];
