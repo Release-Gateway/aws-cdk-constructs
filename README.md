@@ -4,84 +4,216 @@
 
 [![npm version](https://badge.fury.io/js/@release-gateway%2Faws-cdk-constructs.svg)](https://www.npmjs.com/package/@release-gateway/aws-cdk-constructs) [![CI](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Release-Gateway/aws-cdk-constructs/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/Release-Gateway/aws-cdk-constructs/graph/badge.svg?token=QI7BVOB3SA)](https://codecov.io/gh/Release-Gateway/aws-cdk-constructs)
 
-Library of Enterprise ready CDK constructs that are standards compliant with the [CIS 1.4](https://docs.aws.amazon.com/audit-manager/latest/userguide/CIS-1-4.html), [NIST 800-53 Rev5](https://docs.aws.amazon.com/securityhub/latest/userguide/nist-standard.html) and adopting the best practices set out in AWS Well Architected [Reliability](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html) and [Security](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html) Pillars.
+> Enterprise-ready AWS CDK constructs that are compliant with [CIS 1.4](https://docs.aws.amazon.com/audit-manager/latest/userguide/CIS-1-4.html), [NIST 800-53 Rev5](https://docs.aws.amazon.com/securityhub/latest/userguide/nist-standard.html), and AWS Well-Architected [Reliability](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html) and [Security](https://docs.aws.amazon.com/wellarchitected/latest/security-pillar/welcome.html) best practices by default.
 
-This library follows the AWS CDK L1, L2, L3 paradigms and where possible applies the minimum configuration needed to satisfy the cloud standards.
+## Table of Contents
 
-## Why does this exist?
+- [About](#about)
+- [Features](#features)
+- [Why Use This Library?](#why-use-this-library)
+- [How It Works](#how-it-works)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Available Constructs](#available-constructs)
+- [Examples](#examples)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [Support](#support)
+- [License](#license)
+- [Attribution](#attribution)
 
-[AWS CDK]([url](https://aws.amazon.com/cdk/)) is amazing but out of the box it does not enforce any cloud standards for security, reliability etc for the infrastructure it deploys.  With the [AWS shared responsibility model](https://aws.amazon.com/compliance/shared-responsibility-model/)), the cloud is secure but it is your responsonsibility to be secure _in_ the cloud.
+## About
 
-Given AWS' vast surface area and configurability, this responsibility of deploying software can be daunting, leading many engineers to shy away from getting involved in infrustructure.
+This library provides drop-in replacements for standard AWS CDK constructs that automatically apply security and reliability best practices. Built following the AWS CDK L1, L2, and L3 paradigms, these constructs require minimal configuration while ensuring compliance with enterprise cloud standards.
 
-The goal of this repo is to provide native AWS CDK construct alternatives that are cloud standards compliant by default. The hope is that this lowers the barrier to entry for application engineers to get involved in managing and deploying their own infrastructure as code, since the building blocks they are using are known to be standards compliant.
+## Features
 
-Additionally, this repo provides a validator you can wire into your CDK Apps, which lets engineers ensure that _the way_ CDK constructs have been assembled and wired together is compliant.
+✨ **Security by Default** - All constructs enforce encryption, secure configurations, and compliance standards out of the box
 
-This result in secure cloud applications with application engineers able to own their infrastructure safely. Win!
+🛡️ **Policy-as-Code Validation** - Built-in validation using [CloudFormation Guard](https://docs.aws.amazon.com/cfn-guard/latest/ug/what-is-guard.html) ensures your infrastructure stays compliant
 
-## How does it work?
+🔄 **Drop-in Replacements** - Extend native CDK constructs, so you can use them with familiar APIs and patterns
 
-We use policy-as-code tools such as [Cloudformation Guard](https://docs.aws.amazon.com/cfn-guard/latest/ug/what-is-guard.html) to determine whether default constructs such as `Function`, `ApiGateway`, `SecurityGroups`, `DynamoDB` (and many more) are compliant out of the box.  
+📋 **Multi-Standard Compliance** - Meets CIS 1.4, NIST 800-53 Rev5, and AWS Well-Architected Framework requirements
 
-If they are not compliant by default, we create an equivalent CDK class construct that _inherits_ from the AWS construct and implements the necessary config changes to nudge the resulting infrastructure into compliance.
+🚀 **Lower Barrier to Entry** - Empowers application engineers to safely manage infrastructure without deep security expertise
 
-For example, some cloud standards require Cloudwatch Log Groups to be encrypted.  So for our `RGLogGroup` equivalent, we configure the encryption for you under the hood, but you can still use the CDK `RGLogGroup` construct in exactly the same way as `LogGroup` since one inherits from the other.
+## Why Use This Library?
+
+[AWS CDK](https://aws.amazon.com/cdk/) is a powerful infrastructure-as-code framework, but it doesn't enforce security, reliability, or compliance standards by default. According to the [AWS Shared Responsibility Model](https://aws.amazon.com/compliance/shared-responsibility-model/), while AWS secures the cloud infrastructure, you're responsible for security _in_ the cloud.
+
+Given AWS's vast surface area and configurability, deploying secure, compliant infrastructure can be daunting. This often leads engineers to avoid infrastructure management altogether.
+
+**This library solves these challenges by providing:**
+
+- **Standards-compliant building blocks** that work like native CDK constructs
+- **Built-in validation** to ensure your infrastructure assembly is compliant
+- **Reduced cognitive load** so engineers can focus on business logic, not security configurations
+
+The result: secure cloud applications with application engineers confidently owning their infrastructure. Win! 🎉
+
+## How It Works
+
+We use policy-as-code tools like [CloudFormation Guard](https://docs.aws.amazon.com/cfn-guard/latest/ug/what-is-guard.html) to verify whether default CDK constructs such as `Function`, `ApiGateway`, `SecurityGroup`, and `DynamoDB` are compliant out of the box.
+
+When default constructs don't meet compliance standards, we create equivalent CDK constructs that **inherit** from the AWS construct and automatically apply the necessary configurations to achieve compliance.
+
+**Example:** Some cloud standards require CloudWatch Log Groups to be encrypted. Our `RGLogGroup` construct automatically configures encryption for you, but you can use it exactly like the native CDK `LogGroup` construct since one inherits from the other.
+
+```typescript
+// Instead of:
+import { LogGroup } from 'aws-cdk-lib/aws-logs';
+
+// Use:
+import { RGLogGroup } from '@release-gateway/aws-cdk-constructs';
+```
+
+The API remains familiar, but compliance is built in.
 
 ## Installation
 
-Use the package manager npm to install this package:
+### Prerequisites
+
+- Node.js 16.x or later
+- AWS CDK 2.221.1 or later
+- An AWS account with appropriate permissions
+
+### Install via npm
 
 ```bash
 npm install @release-gateway/aws-cdk-constructs
 ```
 
-## Usage
+### Install via Yarn
+
+```bash
+yarn add @release-gateway/aws-cdk-constructs
+```
+
+### Python Support
+
+```bash
+pip install release-gateway.aws-cdk-constructs
+```
+
+## Quick Start
+
+Here's a minimal example to get you started with compliant infrastructure:
 
 ```typescript
-import { RGApp, RGStack, RGStackProps } from "@release-gateway/aws-cdk-constructs"
+import { RGApp, RGStack, RGStackProps } from '@release-gateway/aws-cdk-constructs';
 
-class MyStackStack extends RGStack {
+class MyStack extends RGStack {
   constructor(scope: RGApp, id: string, props: RGStackProps) {
     super(scope, id, props);
-    // Define your stack...
+    
+    // Your infrastructure code here - all constructs will be compliant by default
   }
 }
 
-// Build and synthesize
+// Initialize and synthesize your CDK app
 const app = new RGApp();
-new MyStack(app, "my-stack", {
-  serviceName: "My Service Name",
-  version: "1.0.0"
-})
-app.synth()
-
+new MyStack(app, 'my-stack', {
+  serviceName: 'My Service Name',
+  version: '1.0.0'
+});
+app.synth();
 ```
 
-## Constructs
+The `RGApp` automatically includes the `RGGuardValidator` to validate your infrastructure for compliance before deployment.
 
-| Construct name   | Base class        | Description of changes                                                                                                                               |
-|:-----------------|:------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| RGApp            | App               | Includes RGGuardValidator as policy validator                                                                                                        |
-| RGStack          | Stack             | Adds standard tags and creates shared KMS key for use by child resources                                                                             |
-| RGGuardValidator | CfnGuardValidator | Policy validator configured to enforce CIS 1.4, NIST800-Rev53, Well Architecte Reliabilty Pillar and Well Architected Security Pillar best practices |
-| RGLogGroup       | LogGroup          | Applies kms log encryption, removal policy and sets retention to 1 week                                                                              |
-| RGNodejsFunction | NodejsFunction    | Makes VPC mandatory, creates lambda log group with encryption, configures DLQ and sets removal policy                                                |
-| RGQueue          | Queue             | Sets KMS encryption, removal policy and configures DLQ                                                                                               |
-| RGTable          | TableV2           | Sets KMS encryption,, removal policy                                                                                                                 |
-| RGHttpApi        | HttpApi           | Sets encrypted access logging and throttling defaults                                                                                                |
-| RGRestApi        | RestApi           | Sets encrypted access and execution logging, throttling defaults, regional endpoint type                                                             |
+## Available Constructs
+
+All constructs extend their AWS CDK counterparts and add compliance configurations automatically.
+
+| Construct         | Extends           | Key Compliance Features                                                                                                       |
+|:------------------|:------------------|:------------------------------------------------------------------------------------------------------------------------------|
+| **RGApp**         | App               | Includes RGGuardValidator for policy validation                                                                               |
+| **RGStack**       | Stack             | Adds standard tags and creates shared KMS key for child resources                                                             |
+| **RGGuardValidator** | CfnGuardValidator | Validates against CIS 1.4, NIST 800-53 Rev5, and AWS Well-Architected Reliability & Security best practices                   |
+| **RGLogGroup**    | LogGroup          | Enforces KMS encryption, configures removal policy, sets 1-week retention                                                     |
+| **RGNodejsFunction** | NodejsFunction  | Requires VPC, creates encrypted log groups, configures DLQ, sets removal policy                                               |
+| **RGQueue**       | Queue             | Enables KMS encryption, configures removal policy and DLQ                                                                     |
+| **RGTable**       | TableV2           | Enables KMS encryption, configures removal policy                                                                             |
+| **RGHttpApi**     | HttpApi           | Configures encrypted access logging and throttling defaults                                                                   |
+| **RGRestApi**     | RestApi           | Enables encrypted access and execution logging, throttling defaults, regional endpoint type                                   |
+
+## Examples
+
+Check out the [examples directory](./examples) for complete, working examples:
+
+- **[Kitchen Sink](./examples/kitchen-sink)** - Demonstrates all available constructs in a single stack
+
+## Documentation
+
+For detailed documentation on each construct, including all available properties and methods, please refer to:
+
+- [API Documentation](https://github.com/Release-Gateway/aws-cdk-constructs) (Coming soon)
+- [Examples](./examples)
+- [Source Code](./src)
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
+We welcome contributions! Whether it's bug reports, feature requests, or code contributions, your input helps make this library better for everyone.
 
-Please make sure to update tests as appropriate.
+### How to Contribute
+
+1. **Fork the repository** and create your branch from `main`
+2. **Make your changes** and add tests as appropriate
+3. **Ensure tests pass** by running `npm test`
+4. **Lint your code** with `npm run lint`
+5. **Submit a pull request** with a clear description of your changes
+
+Please read our [Code of Conduct](./CODE_OF_CONDUCT.md) before contributing.
+
+### Reporting Issues
+
+Found a bug or have a feature request? Please [open an issue](https://github.com/Release-Gateway/aws-cdk-constructs/issues) with:
+- A clear, descriptive title
+- Steps to reproduce (for bugs)
+- Expected vs actual behavior
+- Your environment details (Node version, CDK version, etc.)
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/Release-Gateway/aws-cdk-constructs.git
+cd aws-cdk-constructs
+
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Build the library
+npm run build
+
+# Lint code
+npm run lint
+```
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/Release-Gateway/aws-cdk-constructs/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Release-Gateway/aws-cdk-constructs/discussions)
+- **Security**: See our [Security Policy](./SECURITY.md) for reporting vulnerabilities
+
+## Roadmap
+
+We're continuously improving this library. Planned enhancements include:
+
+- Additional compliant constructs (RDS, ECS, EKS, etc.)
+- Support for more compliance frameworks (HIPAA, SOC2, etc.)
+- Comprehensive API documentation website
+- Additional language bindings (Java, C#, Go)
+
+Have ideas? [Open an issue](https://github.com/Release-Gateway/aws-cdk-constructs/issues) to share your suggestions!
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ## Attribution
 
