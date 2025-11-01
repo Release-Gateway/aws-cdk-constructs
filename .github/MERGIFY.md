@@ -67,12 +67,13 @@ The Mergify configuration is located at `.mergify.yml` in the repository root.
 
 1. **automatic rebase when outdated** - Keeps all PRs current with base branch
 2. **rebase on label** - Manual rebase trigger via label
-3. **rebase on command** - Manual rebase trigger via comment
-4. **auto-rebase dependabot PRs** - Keeps dependency update PRs current
-5. **auto-rebase copilot PRs** - Keeps AI-generated PRs current
-6. **label conflicting PRs** - Identifies PRs that need conflict resolution
-7. **auto-merge dependabot PRs** - Automatically merges passing dependency updates
-8. **request review for AI bot PRs** - Ensures human oversight of AI-generated code
+3. **auto-rebase dependabot PRs** - Keeps dependency update PRs current
+4. **auto-rebase copilot PRs** - Keeps AI-generated PRs current
+5. **label conflicting PRs** - Identifies PRs that need conflict resolution
+6. **auto-merge dependabot PRs** - Automatically merges passing dependency updates
+7. **request review for AI bot PRs** - Ensures human oversight of AI-generated code
+
+Note: The `@mergifyio rebase` command is a built-in Mergify feature and works without needing an explicit rule.
 
 ## Best Practices for Solo Development with AI Bots
 

@@ -28,19 +28,6 @@ pull_request_rules:
         remove:
           - rebase
 
-  # Rebase on comment command
-  - name: rebase on command
-    conditions:
-      - -conflict
-      - or:
-        - body~=(?i)@mergifyio rebase
-        - body~=(?i)@mergify rebase
-        - comment.body~=(?i)@mergifyio rebase
-        - comment.body~=(?i)@mergify rebase
-    actions:
-      rebase:
-        bot_account: mergify[bot]
-
   # Auto-update Dependabot PRs when they're behind
   - name: auto-rebase dependabot PRs
     conditions:
