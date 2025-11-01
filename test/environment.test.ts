@@ -17,7 +17,7 @@ describe("Environment utils", () => {
         it("should throw an error if the environment variable does not exist", () => {
             expect(() => {
                 getEnv("DOES_NOT_EXIST");
-            }).toThrowError("Environment variable DOES_NOT_EXIST not set");
+            }).toThrow("Environment variable DOES_NOT_EXIST not set");
         });
     });
 });
