@@ -12,6 +12,7 @@
 - [Features](#features)
 - [Why Use This Library?](#why-use-this-library)
 - [How It Works](#how-it-works)
+- [Adoption Strategy](#adoption-strategy)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Available Constructs](#available-constructs)
@@ -30,13 +31,13 @@ This library provides drop-in replacements for standard AWS CDK constructs that 
 
 ✨ **Security by Default** - All constructs enforce encryption, secure configurations, and compliance standards out of the box
 
-🛡️ **Policy-as-Code Validation** - Built-in validation using [CloudFormation Guard](https://docs.aws.amazon.com/cfn-guard/latest/ug/what-is-guard.html) ensures your infrastructure stays compliant
+🛡️ **Universal Compliance Validation** - `RGApp` validates ALL child constructs for compliance, whether they're from this library, native AWS CDK, or your own custom constructs
 
 🔄 **Drop-in Replacements** - Extend native CDK constructs, so you can use them with familiar APIs and patterns
 
 📋 **Multi-Standard Compliance** - Meets CIS 1.4, NIST 800-53 Rev5, and AWS Well-Architected Framework requirements
 
-🚀 **Lower Barrier to Entry** - Empowers application engineers to safely manage infrastructure without deep security expertise
+🚀 **Incremental Adoption** - Start with just `RGApp` for visibility, then migrate constructs at your own pace—no need for a full rewrite
 
 ## Why Use This Library?
 
@@ -70,6 +71,79 @@ import { RGLogGroup } from '@release-gateway/aws-cdk-constructs';
 
 The API remains familiar, but compliance is built in.
 
+## Adoption Strategy
+
+**You don't need to rewrite your entire infrastructure to benefit from this library.** The beauty of this approach is its flexibility—adopt at your own pace.
+
+### Start with Just RGApp
+
+The fastest way to gain compliance visibility is to simply replace `App` with `RGApp` in your existing CDK application:
+
+```typescript
+// Before
+import { App } from 'aws-cdk-lib';
+const app = new App();
+
+// After - instant compliance validation for ALL your constructs
+import { RGApp } from '@release-gateway/aws-cdk-constructs';
+const app = new RGApp();
+```
+
+**This single change validates your entire stack**, including:
+- Native AWS CDK constructs (`Function`, `Bucket`, `Table`, etc.)
+- Custom constructs you've built
+- Third-party constructs from other libraries
+- Constructs from this library
+
+You'll immediately see which resources are compliant and which need attention—**without changing a single line of infrastructure code**.
+
+### Mix and Match Constructs
+
+As you identify non-compliant resources, you can incrementally replace them with compliant equivalents from this library:
+
+```typescript
+import { RGApp, RGStack, RGLogGroup } from '@release-gateway/aws-cdk-constructs';
+import { Function } from 'aws-cdk-lib/aws-lambda'; // Native CDK construct
+import { Bucket } from 'aws-cdk-lib/aws-s3';       // Native CDK construct
+
+const app = new RGApp(); // Validates everything
+
+class MyStack extends RGStack {
+  constructor(scope: RGApp, id: string, props: RGStackProps) {
+    super(scope, id, props);
+    
+    // Mix compliant constructs from this library...
+    const logs = new RGLogGroup(this, 'Logs', { /* ... */ });
+    
+    // ...with native CDK constructs (RGApp will validate these too)
+    const bucket = new Bucket(this, 'Bucket', { /* ... */ });
+    const lambda = new Function(this, 'Lambda', { /* ... */ });
+  }
+}
+```
+
+**RGApp will validate all of these constructs**, flagging any compliance issues before deployment. You can then prioritize which constructs to migrate based on your compliance requirements and timeline.
+
+### Adoption Paths
+
+**Path 1: Visibility First**
+1. Replace `App` with `RGApp` 
+2. Review compliance report
+3. Make fixes where needed
+
+**Path 2: New Projects**
+- Start with `RGApp` and `RGStack`
+- Use compliant constructs from this library from day one
+- Build secure infrastructure from the ground up
+
+**Path 3: Gradual Migration**
+1. Add `RGApp` for visibility
+2. Migrate high-risk resources first (databases, APIs, storage)
+3. Replace remaining constructs over time
+4. Maintain mixed environment during transition
+
+The key message: **This is not an all-or-nothing approach.** Every construct you adopt improves your security posture, and `RGApp` ensures you always know where you stand.
+
 ## Installation
 
 ### Prerequisites
@@ -98,7 +172,25 @@ pip install release-gateway.aws-cdk-constructs
 
 ## Quick Start
 
-Here's a minimal example to get you started with compliant infrastructure:
+### Option 1: Add Compliance Validation to an Existing App
+
+The simplest way to get started is to add compliance validation to your existing CDK app:
+
+```typescript
+// Replace this:
+import { App } from 'aws-cdk-lib';
+const app = new App();
+
+// With this:
+import { RGApp } from '@release-gateway/aws-cdk-constructs';
+const app = new RGApp();
+
+// That's it! RGApp now validates all your existing constructs for compliance
+```
+
+### Option 2: Build a New Compliant Stack
+
+For new projects, use both `RGApp` and `RGStack` for complete compliance:
 
 ```typescript
 import { RGApp, RGStack, RGStackProps } from '@release-gateway/aws-cdk-constructs';
@@ -107,7 +199,7 @@ class MyStack extends RGStack {
   constructor(scope: RGApp, id: string, props: RGStackProps) {
     super(scope, id, props);
     
-    // Your infrastructure code here - all constructs will be compliant by default
+    // Your infrastructure code here - all constructs will be validated for compliance
   }
 }
 
@@ -120,7 +212,7 @@ new MyStack(app, 'my-stack', {
 app.synth();
 ```
 
-The `RGApp` automatically includes the `RGGuardValidator` to validate your infrastructure for compliance before deployment.
+**Key Point:** `RGApp` automatically validates ALL constructs in your stack—whether they're from this library, native AWS CDK, or custom constructs you've created. This gives you complete visibility into your compliance posture.
 
 ## Available Constructs
 
@@ -128,7 +220,7 @@ All constructs extend their AWS CDK counterparts and add compliance configuratio
 
 | Construct         | Extends           | Key Compliance Features                                                                                                       |
 |:------------------|:------------------|:------------------------------------------------------------------------------------------------------------------------------|
-| **RGApp**         | App               | Includes RGGuardValidator for policy validation                                                                               |
+| **RGApp**         | App               | **Validates ALL child constructs for compliance**—including native CDK, custom, and third-party constructs. Not just constructs from this library! |
 | **RGStack**       | Stack             | Adds standard tags and creates shared KMS key for child resources                                                             |
 | **RGGuardValidator** | CfnGuardValidator | Validates against CIS 1.4, NIST 800-53 Rev5, and AWS Well-Architected Reliability & Security best practices                   |
 | **RGLogGroup**    | LogGroup          | Enforces KMS encryption, configures removal policy, sets 1-week retention                                                     |
