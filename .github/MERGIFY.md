@@ -24,13 +24,13 @@ You can manually trigger a rebase in two ways:
 ### 3. Bot PR Management
 
 **Dependabot PRs:**
-- Automatically rebased when outdated
+- Automatically rebased when outdated (via the general auto-rebase rule)
 - Automatically merged when CI checks pass (can be disabled with `do-not-merge` label)
 - Uses squash merge strategy
 
 **AI Copilot PRs:**
-- Automatically rebased when outdated
-- Receives a comment requesting human review
+- Automatically rebased when outdated (via the general auto-rebase rule)
+- Receives a comment requesting human review (only once)
 - Includes instructions on how to manually rebase if needed
 
 ### 4. Conflict Detection
@@ -65,13 +65,11 @@ The Mergify configuration is located at `.mergify.yml` in the repository root.
 
 ### Key Rules
 
-1. **automatic rebase when outdated** - Keeps all PRs current with base branch
+1. **automatic rebase when outdated** - Keeps all PRs current with base branch (including bot PRs)
 2. **rebase on label** - Manual rebase trigger via label
-3. **auto-rebase dependabot PRs** - Keeps dependency update PRs current
-4. **auto-rebase copilot PRs** - Keeps AI-generated PRs current
-5. **label conflicting PRs** - Identifies PRs that need conflict resolution
-6. **auto-merge dependabot PRs** - Automatically merges passing dependency updates
-7. **request review for AI bot PRs** - Ensures human oversight of AI-generated code
+3. **label conflicting PRs** - Identifies PRs that need conflict resolution
+4. **auto-merge dependabot PRs** - Automatically merges passing dependency updates
+5. **request review for AI bot PRs** - Ensures human oversight of AI-generated code
 
 Note: The `@mergifyio rebase` command is a built-in Mergify feature and works without needing an explicit rule.
 

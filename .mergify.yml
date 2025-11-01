@@ -28,28 +28,6 @@ pull_request_rules:
         remove:
           - rebase
 
-  # Auto-update Dependabot PRs when they're behind
-  - name: auto-rebase dependabot PRs
-    conditions:
-      - author=dependabot[bot]
-      - -conflict
-      - '#commits-behind>0'
-      - -draft
-    actions:
-      rebase:
-        bot_account: mergify[bot]
-
-  # Auto-update Copilot PRs when they're behind
-  - name: auto-rebase copilot PRs
-    conditions:
-      - author~=^copilot-
-      - -conflict
-      - '#commits-behind>0'
-      - -draft
-    actions:
-      rebase:
-        bot_account: mergify[bot]
-
   # Add label when PR has conflicts
   - name: label conflicting PRs
     conditions:
@@ -97,6 +75,7 @@ pull_request_rules:
       - author~=^copilot-
       - -closed
       - -draft
+      - '#comments-by=mergify[bot]=0'
     actions:
       comment:
         message: |
