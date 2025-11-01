@@ -79,7 +79,7 @@ describe("RGStack", () => {
             new RGStack(app, "RGStack", {
                 serviceName: "test",
             } as RGStackProps);
-        }).toThrow("Constructor property `version` is required");
+        }).toThrow("Constructor property `version` is required.");
     });
 
     it("should throw if version is empty", () => {
@@ -90,6 +90,6 @@ describe("RGStack", () => {
         expect(() => {
             // @ts-expect-error Intentionally passing null to test validation
             new RGStack(app, "RGStack", { serviceName: "test", version: null });
-        }).toThrow("Constructor property `version` is required");
+        }).toThrow("Constructor property `version` is required.");
     });
 });
