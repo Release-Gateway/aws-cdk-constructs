@@ -5,7 +5,13 @@ import prettierPlugin from "eslint-plugin-prettier";
 
 export default [
     {
-        ignores: ["dist/**", "**/*.d.ts", "**/*.generated.ts"],
+        ignores: [
+            "dist/**",
+            "**/*.d.ts",
+            "**/*.generated.ts",
+            "**/*.js",
+            "!eslint.config.js",
+        ],
     },
     eslint.configs.recommended,
     ...tseslint.configs.recommended,
