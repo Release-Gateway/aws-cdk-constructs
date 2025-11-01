@@ -189,6 +189,8 @@ export class RGGuardValidator implements IPolicyValidationPluginBeta1 {
                 success: true,
                 metadata: {
                     ...report.metadata,
+                    // Note: metadata values must be strings per
+                    // PolicyValidationPluginReportBeta1 interface
                     suppressedFailure: "true",
                 },
             };
