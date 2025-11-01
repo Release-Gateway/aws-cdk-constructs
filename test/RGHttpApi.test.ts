@@ -53,6 +53,6 @@ describe("RGHttpApi", () => {
         const invalidStack = new Stack(app, "invalid-stack");
         expect(() => {
             new RGHttpApi(invalidStack, "test-http-api");
-        }).toThrowError("RGHttpApi must be used within an RGStack");
+        }).toThrow("RGHttpApi must be used within an RGStack");
     });
 });
