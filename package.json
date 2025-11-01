@@ -62,7 +62,7 @@
         "constructs": "10.4.2",
         "esbuild": "^0.25.11",
         "eslint": "^8.57.1",
-        "eslint-config-prettier": "^9.1.2",
+        "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-prettier": "^5.5.4",
         "jsii": "^5.9.10",
         "jsii-pacmak": "^1.118.0",
