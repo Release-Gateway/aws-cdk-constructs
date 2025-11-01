@@ -1,5 +1,6 @@
 queue_rules:
   - name: default
+    merge_method: squash
     conditions:
       # Only merge PRs with these conditions
       - check-success=lint
@@ -63,11 +64,6 @@ pull_request_rules:
     actions:
       queue:
         name: default
-        method: squash
-        commit_message_template: |
-          {{ title }} (#{{ number }})
-          
-          {{ body }}
 
   # Request review for bot PRs
   - name: request review for AI bot PRs
@@ -75,7 +71,6 @@ pull_request_rules:
       - author~=^copilot-
       - -closed
       - -draft
-      - '#comments-by=mergify[bot]=0'
     actions:
       comment:
         message: |

@@ -30,7 +30,7 @@ You can manually trigger a rebase in two ways:
 
 **AI Copilot PRs:**
 - Automatically rebased when outdated (via the general auto-rebase rule)
-- Receives a comment requesting human review (only once)
+- Receives a comment requesting human review
 - Includes instructions on how to manually rebase if needed
 
 ### 4. Conflict Detection
@@ -39,7 +39,7 @@ You can manually trigger a rebase in two ways:
 - Label is automatically removed when conflicts are resolved
 
 ### 5. Merge Queue
-- Ensures PRs are merged sequentially
+- Ensures PRs are merged sequentially using squash merge
 - Verifies that `lint` and `test` CI checks pass before merging
 - Prevents race conditions when multiple PRs are ready to merge
 
