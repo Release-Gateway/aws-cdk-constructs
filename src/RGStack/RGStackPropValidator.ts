@@ -4,12 +4,12 @@ export const RGStackPropValidator = zod
     .object({
         serviceName: zod
             .string({
-                required_error: "Constructor property `serviceName` is required.",
+                message: "Constructor property `serviceName` is required.",
             })
             .min(1),
         version: zod
             .string({
-                required_error: "Constructor property `version` is required.",
+                message: "Constructor property `version` is required.",
             })
             .min(1),
     })

@@ -7,7 +7,7 @@
   },
   "bundled": {
     "lodash": "^4.17.21",
-    "zod": "^3.25.76"
+    "zod": "^4.1.12"
   },
   "dependencies": {
     "@aws-cdk/aws-apigatewayv2-alpha": "^2.114.1-alpha.0",
@@ -4876,5 +4876,5 @@
     }
   },
   "version": "0.0.0",
-  "fingerprint": "6dd7KlhbQtrkuv42wlHcLESxV0uETBvYyQeQ1k1xdFU="
+  "fingerprint": "17xHgOATpXh2Uzh7JRsh8s/rCR6by2oaG3DfKGUKgIU="
 }

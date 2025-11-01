@@ -10,53 +10,47 @@ describe("RGNodejsFunctionPropsValidator", () => {
         }).toThrowErrorMatchingInlineSnapshot(`
             "[
               {
-                "code": "invalid_type",
                 "expected": "number",
-                "received": "undefined",
+                "code": "invalid_type",
                 "path": [
                   "reservedConcurrentExecutions"
                 ],
-                "message": "Required"
+                "message": "Invalid input: expected number, received undefined"
               },
               {
-                "code": "invalid_type",
                 "expected": "boolean",
-                "received": "undefined",
+                "code": "invalid_type",
                 "path": [
                   "allowAllOutbound"
                 ],
-                "message": "Required"
+                "message": "Invalid input: expected boolean, received undefined"
               },
               {
-                "code": "invalid_type",
                 "expected": "boolean",
-                "received": "undefined",
+                "code": "invalid_type",
                 "path": [
                   "deadLetterQueueEnabled"
                 ],
-                "message": "Required"
+                "message": "Invalid input: expected boolean, received undefined"
               },
               {
                 "code": "custom",
-                "message": "Input not instance of Queue2",
-                "fatal": true,
                 "path": [
                   "deadLetterQueue"
-                ]
+                ],
+                "message": "Input not instance of Queue2"
               },
               {
-                "code": "invalid_type",
                 "expected": "string",
-                "received": "undefined",
+                "code": "invalid_type",
                 "path": [
                   "entry"
                 ],
-                "message": "Required"
+                "message": "Invalid input: expected string, received undefined"
               },
               {
-                "code": "invalid_type",
                 "expected": "object",
-                "received": "undefined",
+                "code": "invalid_type",
                 "path": [
                   "vpc"
                 ],
@@ -81,14 +75,13 @@ describe("RGNodejsFunctionPropsValidator", () => {
         }).toThrowErrorMatchingInlineSnapshot(`
             "[
               {
-                "code": "invalid_type",
                 "expected": "string",
-                "received": "undefined",
+                "code": "invalid_type",
                 "path": [
                   "vpc",
                   "vpcId"
                 ],
-                "message": "Required"
+                "message": "Invalid input: expected string, received undefined"
               }
             ]"
         `);
