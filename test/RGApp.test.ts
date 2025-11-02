@@ -57,8 +57,7 @@ describe("RGApp", () => {
     it("should set throwErrorOnComplianceFail to true by default", () => {
         const newApp = new RGApp();
         const validator = newApp.policyValidationBeta1[0] as RGGuardValidator;
-        // Check that the validator was created with throwErrorOnComplianceFail set to true
-        expect(validator).toBeDefined();
+        expect(validator.throwErrorOnComplianceFail).toBe(true);
     });
 
     it("should accept throwErrorOnComplianceFail as false", () => {
@@ -66,7 +65,7 @@ describe("RGApp", () => {
             throwErrorOnComplianceFail: false,
         });
         const validator = newApp.policyValidationBeta1[0] as RGGuardValidator;
-        expect(validator).toBeDefined();
+        expect(validator.throwErrorOnComplianceFail).toBe(false);
     });
 
     it("should accept both compliance and throwErrorOnComplianceFail props", () => {
@@ -82,5 +81,25 @@ describe("RGApp", () => {
                 expect.stringContaining("FedRAMP-Moderate.guard"),
             ])
         );
+    });
+
+    describe("Validator behavior with throwErrorOnComplianceFail", () => {
+        it("should pass through failed reports when throwErrorOnComplianceFail is true", () => {
+            const validator = new RGGuardValidator({
+                rules: ["/fake/path/test.guard"],
+                throwErrorOnComplianceFail: true,
+            });
+
+            expect(validator.throwErrorOnComplianceFail).toBe(true);
+        });
+
+        it("should suppress failures when throwErrorOnComplianceFail is false", () => {
+            const validator = new RGGuardValidator({
+                rules: ["/fake/path/test.guard"],
+                throwErrorOnComplianceFail: false,
+            });
+
+            expect(validator.throwErrorOnComplianceFail).toBe(false);
+        });
     });
 });

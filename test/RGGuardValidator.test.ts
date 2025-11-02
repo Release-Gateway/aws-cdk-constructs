@@ -43,8 +43,7 @@ describe("GuardValidator", () => {
 
     it("should set throwErrorOnComplianceFail to true by default", () => {
         const guard = new RGGuardValidator();
-        expect(guard).toBeDefined();
-        expect(guard.name).toBeDefined();
+        expect(guard.throwErrorOnComplianceFail).toBe(true);
     });
 
     it("should accept throwErrorOnComplianceFail as false", () => {
@@ -52,7 +51,7 @@ describe("GuardValidator", () => {
             rules: [RULES[ComplianceFramework.CIS_AWS_BENCHMARK_LEVEL_1]],
             throwErrorOnComplianceFail: false,
         });
-        expect(guard).toBeDefined();
+        expect(guard.throwErrorOnComplianceFail).toBe(false);
     });
 
     it("should export the full list of supported rules", () => {

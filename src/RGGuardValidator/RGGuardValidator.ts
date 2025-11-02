@@ -162,7 +162,7 @@ export class RGGuardValidator implements IPolicyValidationPluginBeta1 {
     public readonly name: string;
     public readonly version?: string;
     public readonly ruleIds?: string[];
-    private readonly throwErrorOnComplianceFail: boolean;
+    public readonly throwErrorOnComplianceFail: boolean;
     private readonly validator: CfnGuardValidator;
 
     constructor(props: RGGuardValidatorProps = defaultProps) {

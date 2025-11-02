@@ -4707,6 +4707,20 @@
         },
         {
           "docs": {
+            "stability": "stable"
+          },
+          "immutable": true,
+          "locationInModule": {
+            "filename": "src/RGGuardValidator/RGGuardValidator.ts",
+            "line": 165
+          },
+          "name": "throwErrorOnComplianceFail",
+          "type": {
+            "primitive": "boolean"
+          }
+        },
+        {
+          "docs": {
             "remarks": "Used for analytics\npurposes.",
             "stability": "stable",
             "summary": "The list of rule IDs that the plugin will evaluate."
@@ -5364,5 +5378,5 @@
     }
   },
   "version": "0.0.0",
-  "fingerprint": "Ou0vpn1UwqC4ZqK/pMexplzhbrB/+30iz+lC/gA4+IQ="
+  "fingerprint": "2FEtDC5DV0P2iERrB7bFxdoVU8t9nc2P0JYLXvRjm7g="
 }
