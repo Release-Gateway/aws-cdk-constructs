@@ -97,6 +97,36 @@ const app = new RGApp();
 
 You'll immediately see which resources are compliant and which need attention—**without changing a single line of infrastructure code**.
 
+#### Customize Compliance Frameworks
+
+By default, `RGApp` validates against CIS AWS Benchmark Level 2, NIST 800-53 Rev5, and AWS Well-Architected Reliability & Security Pillars. You can customize this:
+
+```typescript
+import { RGApp, ComplianceFramework } from '@release-gateway/aws-cdk-constructs';
+
+// Validate against specific frameworks only
+const app = new RGApp({
+  compliance: [
+    ComplianceFramework.HIPAA_SECURITY,
+    ComplianceFramework.PCI_DSS_3_2_1,
+    ComplianceFramework.FEDRAMP_MODERATE
+  ]
+});
+```
+
+#### Control Error Handling
+
+By default, compliance violations will fail CDK synthesis. During migration or for reporting-only use cases, you can change this behavior:
+
+```typescript
+// Report violations but don't fail synthesis
+const app = new RGApp({
+  throwErrorOnComplianceFail: false
+});
+```
+
+This is particularly useful when gradually adopting compliance standards, as it provides visibility without blocking deployments.
+
 ### Mix and Match Constructs
 
 As you identify non-compliant resources, you can incrementally replace them with compliant equivalents from this library:
@@ -188,6 +218,35 @@ const app = new RGApp();
 // That's it! RGApp now validates all your existing constructs for compliance
 ```
 
+By default, `RGApp` validates against:
+- CIS AWS Benchmark Level 2
+- NIST 800-53 Rev5
+- AWS Well-Architected Reliability Pillar
+- AWS Well-Architected Security Pillar
+
+You can customize the compliance frameworks:
+
+```typescript
+import { RGApp, ComplianceFramework } from '@release-gateway/aws-cdk-constructs';
+
+// Use only specific frameworks
+const app = new RGApp({
+  compliance: [
+    ComplianceFramework.HIPAA_SECURITY,
+    ComplianceFramework.PCI_DSS_3_2_1
+  ]
+});
+```
+
+Or control whether validation failures block deployment:
+
+```typescript
+// Report violations but don't fail synthesis
+const app = new RGApp({
+  throwErrorOnComplianceFail: false
+});
+```
+
 ### Option 2: Build a New Compliant Stack
 
 For new projects, use both `RGApp` and `RGStack` for complete compliance:
@@ -220,7 +279,7 @@ All constructs extend their AWS CDK counterparts and add compliance configuratio
 
 | Construct         | Extends           | Key Compliance Features                                                                                                       |
 |:------------------|:------------------|:------------------------------------------------------------------------------------------------------------------------------|
-| **RGApp**         | App               | **Validates ALL child constructs for compliance**—including native CDK, custom, and third-party constructs. Not just constructs from this library! |
+| **RGApp**         | App               | **Validates ALL child constructs for compliance**—including native CDK, custom, and third-party constructs. Supports custom compliance frameworks and configurable error handling. |
 | **RGStack**       | Stack             | Adds standard tags and creates shared KMS key for child resources                                                             |
 | **RGGuardValidator** | CfnGuardValidator | Validates against CIS 1.4, NIST 800-53 Rev5, and AWS Well-Architected Reliability & Security best practices                   |
 | **RGLogGroup**    | LogGroup          | Enforces KMS encryption, configures removal policy, sets 1-week retention                                                     |
