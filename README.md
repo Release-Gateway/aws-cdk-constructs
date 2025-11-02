@@ -279,7 +279,7 @@ All constructs extend their AWS CDK counterparts and add compliance configuratio
 
 | Construct         | Extends           | Key Compliance Features                                                                                                       |
 |:------------------|:------------------|:------------------------------------------------------------------------------------------------------------------------------|
-| **RGApp**         | App               | **Validates ALL child constructs for compliance**—including native CDK, custom, and third-party constructs. Supports custom compliance frameworks and configurable error handling. |
+| **RGApp**         | App               | **Validates ALL child constructs for compliance**—including native CDK, custom, and third-party constructs. See configuration options above. |
 | **RGStack**       | Stack             | Adds standard tags and creates shared KMS key for child resources                                                             |
 | **RGGuardValidator** | CfnGuardValidator | Validates against CIS 1.4, NIST 800-53 Rev5, and AWS Well-Architected Reliability & Security best practices                   |
 | **RGLogGroup**    | LogGroup          | Enforces KMS encryption, configures removal policy, sets 1-week retention                                                     |
