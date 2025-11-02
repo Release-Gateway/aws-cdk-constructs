@@ -148,7 +148,7 @@ const defaultProps: RGGuardValidatorProps = {
         RULES[ComplianceFramework.WA_RELIABILITY_PILLAR],
         RULES[ComplianceFramework.WA_SECURITY_PILLAR],
     ],
-    // Control tower can conflict with the above rules but also dont support exemptions
+    // Control tower can conflict with the above rules but also don't support exemptions
     controlTowerRulesEnabled: false,
     throwErrorOnComplianceFail: true,
 };
