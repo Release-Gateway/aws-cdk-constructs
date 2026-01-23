@@ -85,7 +85,7 @@
         "constructs": "^10.4.2"
     },
     "dependencies": {
-        "lodash": "^4.17.21",
+        "lodash": "^4.17.23",
         "zod": "^4.1.12"
     },
     "release": {
