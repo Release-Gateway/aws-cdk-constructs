@@ -55,7 +55,7 @@
         "@tsconfig/recommended": "^1.0.11",
         "@types/jest": "^30.0.0",
         "@types/lodash": "^4.17.20",
-        "@types/node": "^24.9.2",
+        "@types/node": "^25.0.10",
         "@typescript-eslint/eslint-plugin": "^8.46.2",
         "@typescript-eslint/parser": "^8.46.2",
         "aws-cdk-lib": "2.222.0",
